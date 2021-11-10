@@ -1,10 +1,11 @@
+package bdfi;
 import bdfi.exceptions.IdPersonDontExistException;
 import bdfi.exceptions.IdShowDontExistsException;
 import bdfi.exceptions.InvalidGenderException;
 import bdfi.exceptions.InvalidYearException;
 import bdfi.exceptions.ShowAlreadyPremieredException;
 
-public interface BdFI {
+public interface BDFI {
 	
 
 	
