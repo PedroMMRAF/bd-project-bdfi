@@ -1,10 +1,7 @@
 package bdfi.exceptions;
 
-public class IdShowDontExistsException extends Exception {
+public class IdShowDoesNotExistException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 }

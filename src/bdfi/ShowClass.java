@@ -2,13 +2,13 @@ package bdfi;
 
 import java.time.LocalDateTime;
 
-public class ProgramClass implements Program {
+public class ShowClass implements Show {
 	protected String id;
 	protected String title;
 	protected int prodYear;
 	protected boolean producing;
 
-	public ProgramClass(String id, String title, int prodYear) {
+	public ShowClass(String id, String title, int prodYear) {
 		this.id = id;
 		this.title = title;
 		this.prodYear = prodYear;
