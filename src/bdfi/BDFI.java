@@ -83,13 +83,13 @@ public interface BDFI {
 	 * @throws InvalidRatingException      if the evaluation's not between 0 and 10
 	 *                                     stars
 	 * @throws IdShowDoesNotExistException if idShow doesn't exist
-	 * @throws HasPremieredException       if the show has already premiered
+	 * @throws HasPremieredException       if the show has not premiered yet
 	 */
 	void rateShow(String idShow, int stars)
 			throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException;
 
 	/**
-	 * TODO AVISO: Considerar trocar isto por metodos mais especificos
+	 * TODO: Considerar trocar isto por metodos mais especificos
 	 * 
 	 * @param idShow - the show's unique identifier
 	 * @return the show associated to the idShow to print all the information
@@ -99,10 +99,10 @@ public interface BDFI {
 	Show infoShow(String idShow) throws IdShowDoesNotExistException;
 
 	/**
-	 * TODO AVISO: Considerar trocar isto por metodos mais especificos
+	 * TODO: Considerar trocar isto por metodos mais especificos
 	 * 
-	 * @param idPerson the Person's unique identifier
-	 * @return the person associated to the idPerson ti print all the information
+	 * @param idPerson - the professional's unique identifier
+	 * @return the person associated to the idPerson to print all the information
 	 *         required
 	 * @throws IdPersonDoesNotExistException if idPerson doesn't exist
 	 */
@@ -114,18 +114,18 @@ public interface BDFI {
 	 * @param idPerson - the professional's unique identifier
 	 * @return the show where the person are involved --> only a show in stage 1
 	 * @throws IdPersonDoesNotExistException if idPerson doesn't exist
-	 * @throws PersonHasNoShowsException     if Person aren't involved in any show
+	 * @throws PersonHasNoShowsException     if person isn't involved in any show
 	 */
 	Show listPersonShows(String idPerson) throws IdPersonDoesNotExistException, PersonHasNoShowsException;
 
 	/**
-	 * Lists all the persons who participates in the show
+	 * Lists all the people who participate in the show
 	 * 
 	 * @param idShow - the show's unique identifier
-	 * @return an iterator with all the persons who participates in the show
+	 * @return an iterator with all the people who participate in the show
 	 * @throws IdShowDoesNotExistException if idShow doesn't exist
 	 * @throws ShowHasNoParticipants       if the show doesn't have any person
-	 *                                     participating in the show
+	 *                                     participating in it
 	 */
 	Iterator<Person> listPersonInShow(String idShow) throws IdShowDoesNotExistException, ShowHasNoParticipants;
 
@@ -146,17 +146,17 @@ public interface BDFI {
 	 * 
 	 * @param rating the rating condition to list the show
 	 * @return the rated shows with the requested rating
-	 * @throws InvalidRatingException
-	 * @throws NoShowsInSystemException  - if the evaluation's not between 0 and 10
+	 * @throws InvalidRatingException	 if the evaluation's not between 0 and 10
 	 *                                   stars
-	 * @throws NoShowsPremieredException - if the system haven't any show premiered
+	 * @throws NoShowsInSystemException  if the system haven't any show in the
+	 *                                   system
+	 * @throws NoShowsPremieredException if the system haven't any show premiered
 	 *                                   in the system
-	 * @throws NoRatedShowsException     - if the system haven't any show rated
+	 * @throws NoRatedShowsException     if the system haven't any show rated
 	 */
 	Show listShows(int rating)
 			throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException;
 
-	
-	Show listTaggedShows(String tag) NoShowsInSystemException, NoTaggedShowsException;
+	Show listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException;
 
 }

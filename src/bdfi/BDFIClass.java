@@ -81,4 +81,41 @@ public class BDFIClass implements BDFI {
 		return shows.getFirst();
 	}
 
+	@Override
+	public Person infoPerson(String idPerson) throws IdPersonDoesNotExistException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Show listPersonShows(String idPerson) throws IdPersonDoesNotExistException, PersonHasNoShowsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<Person> listPersonInShow(String idShow) throws IdShowDoesNotExistException, ShowHasNoParticipants {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Show listBestShows() throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Show listShows(int rating)
+			throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Show listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

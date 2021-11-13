@@ -14,6 +14,8 @@ public class ShowClass implements Show {
 	protected int prodYear;
 	protected boolean producing;
 	protected List<String> tags;
+	private int ratingCount;
+	private int rating;
 
 	public ShowClass(String id, String title, int prodYear, boolean producing) {
 		this.id = id;
@@ -21,6 +23,8 @@ public class ShowClass implements Show {
 		this.prodYear = prodYear;
 		this.producing = producing;
 		this.tags = new DoubleList<>();
+		this.ratingCount = 0;
+		this.rating = 0;
 	}
 
 	@Override
@@ -51,5 +55,15 @@ public class ShowClass implements Show {
 	@Override
 	public Iterator<String> tagsIterator() {
 		return tags.iterator();
+	}
+	
+	public void addRating(int stars) {
+		rating = Math.round((float) ((stars + ratingCount * rating) / ((float) (rating + 1))));
+		ratingCount++;
+	}
+	
+	@Override
+	public int getRating() {
+		return rating;
 	}
 }

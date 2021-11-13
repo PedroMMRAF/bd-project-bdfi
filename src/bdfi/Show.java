@@ -42,5 +42,10 @@ public interface Show {
 	 * @return a iterator of tags
 	 */
 	Iterator<String> tagsIterator();
+	
+	/**
+	 * @return the show's rating
+	 */
+	int getRating();
 
 }
