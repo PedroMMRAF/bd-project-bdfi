@@ -66,4 +66,23 @@ public class ShowClass implements Show {
 	public int getRating() {
 		return rating;
 	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof ShowClass))
+			return false;
+		ShowClass other = (ShowClass) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
+	
 }

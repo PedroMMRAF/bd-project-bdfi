@@ -41,12 +41,35 @@ public class BDFIClass implements BDFI {
 		shows.addLast(new ShowClass(idShow, title, pYear, pYear == currentYear));
 	}
 
+	private boolean hasSystemPerson(Person person) {
+		boolean find = false;
+		for(int i = 0; i < people.size() && !find; i++)
+			if(people.get(i).equals(person))
+				find = true;
+		return find;
+	}
+	
+	private boolean hasSystemShow(Show show) {
+		boolean find = false;
+		for(int i = 0; i < people.size() && !find; i++)
+			if(shows.get(i).equals(show))
+				find = true;
+		return false;
+	}
+	
 	@Override
 	public void addParticipation(String idPerson, String IdShow, String description)
 			throws IdPersonDoesNotExistException, IdShowDoesNotExistException {
-		// TODO Auto-generated method stub
-
+		Person person = new PersonClass(IdShow, null, 0, null, null, null);
+		if(!hasSystemPerson(person))
+			throw new IdPersonDoesNotExistException();
+		Show show = new ShowClass(IdShow, null, 0, false);
+		if(!hasSystemShow(show))
+			throw new IdShowDoesNotExistException();
+		shows.getFirst()
+		
 	}
+
 
 	@Override
 	public void premiereShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {

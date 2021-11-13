@@ -64,4 +64,22 @@ public class PersonClass implements Person {
 	public Show showsIterator() {
 		return show;
 	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof PersonClass))
+			return false;
+		PersonClass other = (PersonClass) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
 }
