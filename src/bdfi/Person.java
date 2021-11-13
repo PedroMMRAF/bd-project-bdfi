@@ -1,5 +1,7 @@
 package bdfi;
 
+import dataStructures.Iterator;
+
 /**
  * 
  * @author Guilherme Santana 60182
@@ -9,7 +11,7 @@ package bdfi;
 public interface Person {
 
 	/**
-	 * @return the person's id
+	 * @return the person's id\
 	 */
 	String getId();
 
@@ -37,5 +39,18 @@ public interface Person {
 	 * @return the person's phone number
 	 */
 	String getPhone();
+	
+	/**
+	 * TODO: DISCUTIR IMPLEMENTACAO
+	 * 
+	 * @return a iterator with all the person's shows
+	 */
+	Show showsIterator();
+	
+	/**
+	 * Adds a show where the person participate
+	 * @param show
+	 */
+	void addShow(Show show);
 
 }

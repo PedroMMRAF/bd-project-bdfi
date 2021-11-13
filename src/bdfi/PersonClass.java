@@ -1,5 +1,9 @@
 package bdfi;
 
+import dataStructures.DoubleList;
+import dataStructures.Iterator;
+import dataStructures.List;
+
 /**
  * 
  * @author Guilherme Santana 60182
@@ -13,6 +17,7 @@ public class PersonClass implements Person {
 	private Gender gender;
 	private String email;
 	private String phone;
+	private Show show; 		//primeira fase apenas tem um programa
 
 	public PersonClass(String id, String name, int birthYear, Gender gender, String email, String phone) {
 		this.id = id;
@@ -21,6 +26,7 @@ public class PersonClass implements Person {
 		this.phone = phone;
 		this.gender = gender;
 		this.birthYear = birthYear;
+		show = null;
 	}
 
 	@Override
@@ -51,5 +57,15 @@ public class PersonClass implements Person {
 	@Override
 	public String getPhone() {
 		return phone;
+	}
+	
+	@Override
+	public void addShow(Show show) {
+		this.show = show;
+	}
+
+	@Override
+	public Show showsIterator() {
+		return show;
 	}
 }
