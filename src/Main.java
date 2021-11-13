@@ -1,12 +1,6 @@
-import java.time.LocalDateTime;
 import java.util.Scanner;
 import bdfi.*;
-import bdfi.exceptions.HasPremieredException;
-import bdfi.exceptions.IdPersonDoesNotExistException;
-import bdfi.exceptions.IdShowDoesNotExistException;
-import bdfi.exceptions.InvalidGenderException;
-import bdfi.exceptions.InvalidRatingException;
-import bdfi.exceptions.InvalidYearException;
+import bdfi.exceptions.*;
 import dataStructures.Iterator;
 
 /**
@@ -16,16 +10,20 @@ import dataStructures.Iterator;
  *
  */
 public class Main {
+	// Current year to be used by the constructor of the database
+	private static final int CURRENT_YEAR = 2021;
+
 	// Gender names
-	public static final String MALE = "male";
-	public static final String FEMALE = "female";
-	public static final String OTHER = "other";
-	public static final String NOT_PROVIDED = "not-provided";
+	private static final String MALE = "Male";
+	private static final String FEMALE = "Female";
+	private static final String OTHER = "Other";
+	private static final String NOT_PROVIDED = "Not-provided";
 
 	// Success messages
 	private static final String PERSON_ADDED = "Person added.\n";
-	private static final String SHOW_ADDED = "Show added.\n";
+	private static final String PERSON_FORMAT = "%s %s %d %s %s %s";
 	private static final String PARTICIPATION_ADDED = "Participation added.\n";
+	private static final String SHOW_ADDED = "Show added.\n";
 	private static final String SHOW_PREMIERED = "Successful production.\n";
 	private static final String SHOW_REMOVED = "Show removed.\n";
 	private static final String SHOW_TAGGED = "Tag added.\n";
@@ -39,10 +37,13 @@ public class Main {
 	private static final String INVALID_RATING = "Invalid Rating.";
 	private static final String PERSON_EXISTS = "idPerson exists.\n";
 	private static final String PERSON_MISSING = "idPerson does not exist.\n";
+	private static final String PERSON_NO_SHOWS = "idPerson has no shows.\n";
 	private static final String SHOW_EXISTS = "idShow exists.\n";
 	private static final String SHOW_MISSING = "idShow does not exist.\n";
 	private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed production.\n";
 	private static final String SHOW_NOT_PREMIERED = "idShow is in production.\n";
+	private static final String SHOW_NO_PEOPLE = "idShow has no participations.\n";
+	private static final String QUIT_MESSAGE = "Serializing and quitting...\n";
 
 	/**
 	 * Main class entry point
@@ -51,7 +52,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
-		BDFI bdfi = new BDFIClass(LocalDateTime.now().getYear());
+		BDFI bdfi = new BDFIClass(CURRENT_YEAR);
 
 		// Run until false is returned, meaning execution ended
 		while (runCommands(in, bdfi))
@@ -78,16 +79,16 @@ public class Main {
 	 * @param in - system in scanner
 	 * @return a gender if any valid match occurs, <code>null</code> otherwise
 	 */
-	private static Gender getGender(Scanner in) {
-		switch (in.next().toLowerCase()) {
+	private static String getGender(Scanner in) {
+		String gender = in.next().toLowerCase();
+		gender = gender.substring(0, 1).toUpperCase() + gender.substring(1);
+
+		switch (gender) {
 		case MALE:
-			return Gender.MALE;
 		case FEMALE:
-			return Gender.FEMALE;
 		case OTHER:
-			return Gender.OTHER;
 		case NOT_PROVIDED:
-			return Gender.NOT_PROVIDED;
+			return gender;
 		default:
 			return null;
 		}
@@ -127,7 +128,26 @@ public class Main {
 		case RATESHOW:
 			rateShow(in, bdfi);
 			break;
-		case EXIT:
+		case INFOPERSON:
+			infoPerson(in, bdfi);
+			break;
+		case LISTBESTSHOWS:
+			listBestShows(in, bdfi);
+			break;
+		case LISTPARTICIPATIONS:
+			listParticipations(in, bdfi);
+			break;
+		case LISTSHOWS:
+			listShows(in, bdfi);
+			break;
+		case LISTSHOWSPERSON:
+			listShowsPerson(in, bdfi);
+			break;
+		case LISTTAGGEDSHOWS:
+			listTaggedShows(in, bdfi);
+			break;
+		case QUIT:
+			quit(bdfi);
 			// Returning false ends command execution
 			return false;
 		case UNKNOWN:
@@ -151,7 +171,7 @@ public class Main {
 		int bYear = in.nextInt();
 		String email = in.next();
 		String phone = in.next();
-		Gender gender = getGender(in);
+		String gender = getGender(in);
 		String name = in.nextLine().strip();
 
 		try {
@@ -292,7 +312,7 @@ public class Main {
 		}
 
 	}
-	
+
 	/**
 	 * Adds a rating to a show
 	 * 
@@ -303,9 +323,10 @@ public class Main {
 		String idShow = in.next();
 		int stars = in.nextInt();
 		in.nextLine();
-		
+
 		try {
 			bdfi.rateShow(idShow, stars);
+			System.out.printf(SHOW_RATED);
 		} catch (InvalidRatingException e) {
 			System.out.printf(INVALID_RATING);
 		} catch (IdShowDoesNotExistException e) {
@@ -313,7 +334,71 @@ public class Main {
 		} catch (HasPremieredException e) {
 			System.out.printf(SHOW_NOT_PREMIERED);
 		}
+
+	}
+
+	private static void infoPerson(Scanner in, BDFI bdfi) {
+		String idPerson = in.next();
+		in.nextLine();
+
+		try {
+			Person person = bdfi.infoPerson(idPerson);
+
+			System.out.printf(PERSON_FORMAT, person.getId(), person.getName(), person.getBirthYear(), person.getEmail(),
+					person.getPhone(), person.getGender());
+		} catch (IdPersonDoesNotExistException e) {
+			System.out.printf(PERSON_MISSING);
+		}
+
+	}
+
+	private static void listShowsPerson(Scanner in, BDFI bdfi) {
+		String idPerson = in.next();
+		in.nextLine();
+
+		try {
+			Show show = bdfi.listPersonShows(idPerson);
+
+			System.out.printf(SHOW_FORMAT, show.getId(), show.getTitle(), show.getProductionYear(), show.getRating());
+		} catch (IdPersonDoesNotExistException e) {
+			System.out.printf(PERSON_MISSING);
+		} catch (PersonHasNoShowsException e) {
+			System.out.printf(PERSON_NO_SHOWS);
+		}
+
+	}
+
+	private static void listParticipations(Scanner in, BDFI bdfi) {
+		String idShow = in.next();
+		in.nextLine();
 		
+		try {
+			Iterator<Person> people = bdfi.listPersonInShow(idShow);
+		} catch (IdShowDoesNotExistException e) {
+			System.out.printf(SHOW_MISSING);
+		} catch (ShowHasNoParticipants e) {
+			System.out.printf(SHOW_NO_PEOPLE);
+		}
+	
+	}
+
+	private static void listBestShows(Scanner in, BDFI bdfi) {
+
+	}
+
+	private static void listShows(Scanner in, BDFI bdfi) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void listTaggedShows(Scanner in, BDFI bdfi) {
+		// TODO Auto-generated method stub
+
+	}
+
+	private static void quit(BDFI bdfi) {
+		System.out.printf(QUIT_MESSAGE);
+
 	}
 
 }

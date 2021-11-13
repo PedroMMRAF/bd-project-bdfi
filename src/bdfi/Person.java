@@ -1,7 +1,5 @@
 package bdfi;
 
-import dataStructures.Iterator;
-
 /**
  * 
  * @author Guilherme Santana 60182
@@ -28,7 +26,7 @@ public interface Person {
 	/**
 	 * @return the person's gender
 	 */
-	Gender getGender();
+	String getGender();
 
 	/**
 	 * @return the person's email

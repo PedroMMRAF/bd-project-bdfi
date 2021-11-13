@@ -22,7 +22,7 @@ public class BDFIClass implements BDFI {
 	}
 
 	@Override
-	public void addPerson(String idPerson, String name, int bYear, Gender gender, String email, String phone)
+	public void addPerson(String idPerson, String name, int bYear, String gender, String email, String phone)
 			throws InvalidYearException, InvalidGenderException {
 		if (bYear < 0 && bYear > currentYear)
 			throw new InvalidYearException();

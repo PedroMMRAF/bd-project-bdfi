@@ -22,7 +22,7 @@ public interface BDFI {
 	 * @param phone    - the professional's phone
 	 * @throws InvalidYearException if the provided year exceeds the current year
 	 */
-	void addPerson(String idPerson, String name, int bYear, Gender gender, String email, String phone)
+	void addPerson(String idPerson, String name, int bYear, String gender, String email, String phone)
 			throws InvalidYearException, InvalidGenderException;
 
 	/**
