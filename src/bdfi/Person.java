@@ -9,7 +9,7 @@ package bdfi;
 public interface Person {
 
 	/**
-	 * @return the person's id\
+	 * @return the person's id
 	 */
 	String getId();
 

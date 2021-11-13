@@ -32,11 +32,6 @@ public interface Show {
 	boolean isProducing();
 
 	/**
-	 * Finishes production of the show
-	 */
-	void finishProduction();
-
-	/**
 	 * Lists all the tags of the program
 	 * 
 	 * @return a iterator of tags
@@ -47,5 +42,17 @@ public interface Show {
 	 * @return the show's rating
 	 */
 	int getRating();
+
+	/**
+	 * Finishes production of the show
+	 */
+	void finishProduction();
+	
+	/**
+	 * Adds a participant to the show
+	 * 
+	 * @param person - the participant to add
+	 */
+	void addParticipant(Person person);
 
 }

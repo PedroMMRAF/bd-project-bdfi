@@ -43,6 +43,12 @@ public class Main {
 	private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed production.\n";
 	private static final String SHOW_NOT_PREMIERED = "idShow is in production.\n";
 	private static final String SHOW_NO_PEOPLE = "idShow has no participations.\n";
+	private static final String NO_SHOWS = "No shows.\n";
+	private static final String NO_SHOWS_PREMIERED = "No finished productions.\n";
+	private static final String NO_SHOWS_RATED = "No rated productions.\n";
+	private static final String NO_SHOWS_WITH_RATING = "No productions with rating.\n";
+	private static final String NO_SHOWS_TAGGED = "No tagged productions.\n";
+	private static final String NO_SHOWS_WITH_TAG = "No shows with tag.\n";
 	private static final String QUIT_MESSAGE = "Serializing and quitting...\n";
 
 	/**
@@ -158,6 +164,15 @@ public class Main {
 
 		// Returning true continues command execution
 		return true;
+	}
+
+	private static void printShow(Show show) {
+		System.out.printf(SHOW_FORMAT, show.getId(), show.getTitle(), show.getProductionYear(), show.getRating());
+	}
+
+	private static void printPerson(Person person) {
+		System.out.printf(PERSON_FORMAT, person.getId(), person.getName(), person.getBirthYear(), person.getEmail(),
+				person.getPhone(), person.getGender());
 	}
 
 	/**
@@ -337,6 +352,12 @@ public class Main {
 
 	}
 
+	/**
+	 * Shows information about a professional on the database
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void infoPerson(Scanner in, BDFI bdfi) {
 		String idPerson = in.next();
 		in.nextLine();
@@ -344,14 +365,19 @@ public class Main {
 		try {
 			Person person = bdfi.infoPerson(idPerson);
 
-			System.out.printf(PERSON_FORMAT, person.getId(), person.getName(), person.getBirthYear(), person.getEmail(),
-					person.getPhone(), person.getGender());
+			printPerson(person);
 		} catch (IdPersonDoesNotExistException e) {
 			System.out.printf(PERSON_MISSING);
 		}
 
 	}
 
+	/**
+	 * Lists every show a professional is participating in
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void listShowsPerson(Scanner in, BDFI bdfi) {
 		String idPerson = in.next();
 		in.nextLine();
@@ -359,7 +385,7 @@ public class Main {
 		try {
 			Show show = bdfi.listPersonShows(idPerson);
 
-			System.out.printf(SHOW_FORMAT, show.getId(), show.getTitle(), show.getProductionYear(), show.getRating());
+			printShow(show);
 		} catch (IdPersonDoesNotExistException e) {
 			System.out.printf(PERSON_MISSING);
 		} catch (PersonHasNoShowsException e) {
@@ -368,34 +394,113 @@ public class Main {
 
 	}
 
+	/**
+	 * Lists a show's professionals
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void listParticipations(Scanner in, BDFI bdfi) {
 		String idShow = in.next();
 		in.nextLine();
-		
+
 		try {
 			Iterator<Person> people = bdfi.listPersonInShow(idShow);
+
+			while (people.hasNext())
+				printPerson(people.next());
+
 		} catch (IdShowDoesNotExistException e) {
 			System.out.printf(SHOW_MISSING);
 		} catch (ShowHasNoParticipants e) {
 			System.out.printf(SHOW_NO_PEOPLE);
 		}
-	
+
 	}
 
+	/**
+	 * Lists the shows with the best ratings on the database
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void listBestShows(Scanner in, BDFI bdfi) {
+		in.nextLine();
 
+		try {
+			Show show = bdfi.listBestShows();
+
+			printShow(show);
+		} catch (NoShowsInSystemException e) {
+			System.out.printf(NO_SHOWS);
+		} catch (NoShowsPremieredException e) {
+			System.out.printf(NO_SHOWS_PREMIERED);
+		} catch (NoRatedShowsException e) {
+			System.out.printf(NO_SHOWS_RATED);
+		}
 	}
 
+	/**
+	 * Lists every show on the database with a specific rating
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void listShows(Scanner in, BDFI bdfi) {
-		// TODO Auto-generated method stub
+		int rating = in.nextInt();
+		in.nextLine();
+
+		try {
+			Show show = bdfi.listShows(rating);
+
+			if (show == null)
+				System.out.printf(NO_SHOWS_WITH_RATING);
+			else
+				printShow(show);
+
+		} catch (InvalidRatingException e) {
+			System.out.printf(INVALID_RATING);
+		} catch (NoShowsInSystemException e) {
+			System.out.printf(NO_SHOWS);
+		} catch (NoShowsPremieredException e) {
+			System.out.printf(NO_SHOWS_PREMIERED);
+		} catch (NoRatedShowsException e) {
+			System.out.printf(NO_SHOWS_RATED);
+		}
 
 	}
 
+	/**
+	 * Lists every tagged show on the database
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void listTaggedShows(Scanner in, BDFI bdfi) {
-		// TODO Auto-generated method stub
+		String tag = in.nextLine().strip();
+
+		try {
+			Show show = bdfi.listTaggedShows(tag);
+
+			if (show == null)
+				System.out.printf(NO_SHOWS_WITH_TAG);
+			else
+				printShow(show);
+
+		} catch (NoShowsInSystemException e) {
+			System.out.printf(NO_SHOWS);
+		} catch (NoTaggedShowsException e) {
+			System.out.printf(NO_SHOWS_TAGGED);
+		}
 
 	}
 
+	/**
+	 * Serializes the database before finishing the program
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void quit(BDFI bdfi) {
 		System.out.printf(QUIT_MESSAGE);
 
