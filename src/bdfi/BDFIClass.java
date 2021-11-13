@@ -1,11 +1,6 @@
 package bdfi;
 
-import bdfi.exceptions.IdPersonDoesNotExistException;
-import bdfi.exceptions.IdShowDoesNotExistException;
-import bdfi.exceptions.InvalidGenderException;
-import bdfi.exceptions.InvalidYearException;
-import bdfi.exceptions.ShowAlreadyPremieredException;
-
+import bdfi.exceptions.*;
 public class BDFIClass implements BDFI {
 
 	@Override
@@ -29,13 +24,13 @@ public class BDFIClass implements BDFI {
 	}
 
 	@Override
-	public void showPremiere(String idShow) throws ShowAlreadyPremieredException, IdShowDoesNotExistException {
+	public void showPremiere(String idShow) throws HasPremieredException, IdShowDoesNotExistException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void removeShow(String idShow) throws ShowAlreadyPremieredException, IdShowDoesNotExistException {
+	public void removeShow(String idShow) throws HasPremieredException, IdShowDoesNotExistException {
 		// TODO Auto-generated method stub
 
 	}

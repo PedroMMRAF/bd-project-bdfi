@@ -2,11 +2,15 @@ package bdfi;
 
 import java.time.LocalDateTime;
 
+import dataStructures.Iterator;
+import dataStructures.List;
+
 public class ShowClass implements Show {
 	protected String id;
 	protected String title;
 	protected int prodYear;
 	protected boolean producing;
+	protected List<String> tags;
 
 	public ShowClass(String id, String title, int prodYear) {
 		this.id = id;
@@ -38,5 +42,10 @@ public class ShowClass implements Show {
 	@Override
 	public void finishProduction() {
 		producing = false;
+	}
+	
+	@Override
+	public Iterator<String> tagsIterator() {
+		return tags.iterator();
 	}
 }

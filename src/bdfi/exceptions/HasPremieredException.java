@@ -1,6 +1,6 @@
 package bdfi.exceptions;
 
-public class InvalidYearException extends Exception {
+public class HasPremieredException extends Exception {
 
 	/**
 	 * 

@@ -1,5 +1,7 @@
 package bdfi;
 
+import dataStructures.Iterator;
+
 public interface Show {
 
 	/**
@@ -27,5 +29,11 @@ public interface Show {
 	 * Finishes production of the show
 	 */
 	void finishProduction();
+	
+	/**
+	 * Lists all the tags of the program 
+	 * @return a iterator of tags
+	 */
+	Iterator<String> tagsIterator();
 
 }

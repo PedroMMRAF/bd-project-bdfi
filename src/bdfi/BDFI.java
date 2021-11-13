@@ -1,10 +1,7 @@
 package bdfi;
 
-import bdfi.exceptions.IdPersonDoesNotExistException;
-import bdfi.exceptions.IdShowDoesNotExistException;
-import bdfi.exceptions.InvalidGenderException;
-import bdfi.exceptions.InvalidYearException;
-import bdfi.exceptions.ShowAlreadyPremieredException;
+import bdfi.exceptions.*;
+
 
 public interface BDFI {
 
@@ -47,19 +44,46 @@ public interface BDFI {
 	/**
 	 * 
 	 * @param idShow - is the identifier of the new program added to the system
-	 * @throws ShowAlreadyPremieredException if the show already had premiered
+	 * @throws HasPremieredException		 if the show already had premiered
 	 * @throws IdShowDoesNotExistException   if the idShow don't exist
 	 */
-	void showPremiere(String idShow) throws ShowAlreadyPremieredException, IdShowDoesNotExistException;
+	void showPremiere(String idShow) throws HasPremieredException, IdShowDoesNotExistException;
 
 	/**
 	 * Removes a register program on the system. This remove implies the remotion of
 	 * the connections between program and participants
 	 * 
 	 * @param idShow - is the identifier of the new program added to the system
-	 * @throws ShowAlreadyPremieredException if the show already had premiered
+	 * @throws HasPremieredException if the show already had premiered
 	 * @throws IdShowDoesNotExistException   if the idShow don't exist
 	 */
-	void removeShow(String idShow) throws ShowAlreadyPremieredException, IdShowDoesNotExistException;
+	void removeShow(String idShow) throws HasPremieredException, IdShowDoesNotExistException;
+	
+	/**
+	 * Adds a new key-word to the program
+	 * @param idShow - is the identifier of the new program added to the system
+	 * @param tag	 - the new key-word added to the show
+	 * @throws IdShowDoesNotExistException if the idShow don't exist
+	 */
+	void addTag(String idShow, String tag) throws IdShowDoesNotExistException;
 
+	/**
+	 * 
+	 * @param idShow - is the identifier of the new program added to the system
+	 * @return the show associated to the idShow to print all the information required
+	 * @throws IdShowDoesNotExistException	if the idShow don't exist
+	 */
+	Show infoShow(String idShow) throws IdShowDoesNotExistException;
+	
+	/**
+	 * 
+	 * @param idShow	- is the identifier of the new program added to the system
+	 * @param stars 	- is the show's evaluation
+	 * @throws InvalidRatingException 		if the evaluation stars aren't between 0 and 10
+	 * @throws HasPremieredException 		if the show already had premiered
+	 * @throws IdShowDoesNotExistException	if the idShow don't exist
+	 */
+	void rateShow(String idShow, int stars) throws InvalidRatingException, HasPremieredException, IdShowDoesNotExistException;
+	
+	
 }
