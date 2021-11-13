@@ -146,17 +146,26 @@ public interface BDFI {
 	 * 
 	 * @param rating the rating condition to list the show
 	 * @return the rated shows with the requested rating
-	 * @throws InvalidRatingException	 if the evaluation's not between 0 and 10
+	 * @throws InvalidRatingException    if the evaluation's not between 0 and 10
 	 *                                   stars
 	 * @throws NoShowsInSystemException  if the system haven't any show in the
 	 *                                   system
-	 * @throws NoShowsPremieredException if the system haven't any show premiered
-	 *                                   in the system
+	 * @throws NoShowsPremieredException if the system haven't any show premiered in
+	 *                                   the system
 	 * @throws NoRatedShowsException     if the system haven't any show rated
 	 */
 	Show listShows(int rating)
 			throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException;
 
+	/**
+	 * TODO: DISCUTIR IMPLEMENTACAO DA FUNCAO
+	 * 
+	 * 
+	 * @param tag - is the keyword to search for with it
+	 * @return the shows with the specific tag 
+	 * @throws NoShowsInSystemException if the system haven't any show in the system
+	 * @throws NoTaggedShowsException if haven't any show with the tag 
+	 */
 	Show listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException;
 
 }
