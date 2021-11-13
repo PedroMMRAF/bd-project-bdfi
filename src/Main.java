@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Scanner;
 import bdfi.*;
 import bdfi.exceptions.InvalidGenderException;
@@ -5,8 +6,8 @@ import bdfi.exceptions.InvalidYearException;
 
 /**
  * 
+ * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
- * @author Guilherme Santana
  *
  */
 public class Main {
@@ -21,6 +22,7 @@ public class Main {
 	public static final String SHOW_ADDED = "Show added.\n";
 
 	// Error messages
+	public static final String UNKNOWN_COMMAND = "Unknown command.\n";
 	public static final String INVALID_YEAR = "Invalid year.\n";
 	public static final String INVALID_GENDER = "Invalid gender information.\n";
 	public static final String ID_PERSON_EXISTS = "idPerson exists.\n";
@@ -32,8 +34,9 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
-		BDFI bdfi = new BDFIClass();
+		BDFI bdfi = new BDFIClass(LocalDateTime.now().getYear());
 
+		// Run until false is returned, meaning execution ended
 		while (runCommands(in, bdfi))
 			;
 	}
@@ -48,7 +51,7 @@ public class Main {
 		try {
 			return Command.valueOf(in.next().toUpperCase());
 		} catch (IllegalArgumentException e) {
-			return Command.UNKNOWN;
+			return null;
 		}
 	}
 
@@ -56,8 +59,7 @@ public class Main {
 	 * Gets the next string separated by spaces in the scanner as a gender
 	 * 
 	 * @param in - system in scanner
-	 * @return a gender
-	 * @throws InvalidGenderException when information about the gender is not valid
+	 * @return a gender if any valid match occurs, <code>null</code> otherwise
 	 */
 	private static Gender getGender(Scanner in) {
 		switch (in.next().toLowerCase()) {
@@ -70,7 +72,7 @@ public class Main {
 		case NOT_PROVIDED:
 			return Gender.NOT_PROVIDED;
 		default:
-			return Gender.INVALID;
+			return null;
 		}
 	}
 
@@ -83,10 +85,6 @@ public class Main {
 	 *         otherwise
 	 */
 	private static boolean runCommands(Scanner in, BDFI bdfi) {
-		// Variable that determines if execution should
-		// continue or not
-		boolean cont = true;
-
 		switch (getCommand(in)) {
 		case ADDPERSON:
 			addPerson(in, bdfi);
@@ -94,16 +92,20 @@ public class Main {
 		case ADDSHOW:
 			addShow(in, bdfi);
 			break;
-		case UNKNOWN:
-			cont = false;
+		case EXIT:
+			// Returning false ends command execution
+			return false;
+		default:
+			System.out.printf(UNKNOWN_COMMAND);
 			break;
 		}
 
-		return cont;
+		// Returning true continues command execution
+		return true;
 	}
 
 	/**
-	 * Inserts a professional to the database
+	 * Adds a new professional to the database
 	 * 
 	 * @param in   - system in scanner
 	 * @param bdfi - database object
@@ -115,19 +117,23 @@ public class Main {
 		String phone = in.next();
 		Gender gender = getGender(in);
 		String name = in.nextLine().strip();
-		
+
 		try {
-			bdfi.addPerson(id, bYear, email, phone, gender, name);
+			bdfi.addPerson(id, name, bYear, gender, email, phone);
 			System.out.printf(PERSON_ADDED);
-		}
-		catch (InvalidYearException e) {
+		} catch (InvalidYearException e) {
 			System.out.printf(INVALID_YEAR);
-		}
-		catch (InvalidGenderException e) {
+		} catch (InvalidGenderException e) {
 			System.out.printf(INVALID_GENDER);
 		}
 	}
 
+	/**
+	 * Adds a new show to the database
+	 * 
+	 * @param in   - system in scanner
+	 * @param bdfi - database object
+	 */
 	private static void addShow(Scanner in, BDFI bdfi) {
 		String id = in.next();
 		int pYear = in.nextInt();
@@ -136,8 +142,7 @@ public class Main {
 		try {
 			bdfi.addShow(id, pYear, title);
 			System.out.printf(SHOW_ADDED);
-		}
-		catch (InvalidYearException e) {
+		} catch (InvalidYearException e) {
 			System.out.printf(INVALID_YEAR);
 		}
 

@@ -1,19 +1,44 @@
 package bdfi;
 
+import dataStructures.*;
 import bdfi.exceptions.*;
+
+/**
+ * 
+ * @author Guilherme Santana 60182
+ * @author Pedro Fernandes 60694
+ *
+ */
 public class BDFIClass implements BDFI {
 
-	@Override
-	public void addPerson(String id, int Byear, String email, String phone, Gender gender, String name)
-			throws InvalidYearException, InvalidGenderException {
-		// TODO Auto-generated method stub
+	private int currentYear;
+	private List<Person> people;
+	private List<Show> shows;
 
+	public BDFIClass(int currentYear) {
+		this.currentYear = currentYear;
+		this.people = new DoubleList<>();
+		this.shows = new DoubleList<>();
 	}
 
 	@Override
-	public void addShow(String idShow, int Pyear, String title) throws InvalidYearException {
-		// TODO Auto-generated method stub
+	public void addPerson(String idPerson, String name, int bYear, Gender gender, String email, String phone)
+			throws InvalidYearException, InvalidGenderException {
+		if (bYear < 0 && bYear > currentYear)
+			throw new InvalidYearException();
 
+		if (gender == null)
+			throw new InvalidGenderException();
+
+		people.addLast(new PersonClass(idPerson, name, bYear, gender, email, phone));
+	}
+
+	@Override
+	public void addShow(String idShow, int pYear, String title) throws InvalidYearException {
+		if (pYear > currentYear)
+			throw new InvalidYearException();
+
+		shows.addLast(new ShowClass(idShow, title, pYear, pYear == currentYear));
 	}
 
 	@Override
@@ -24,15 +49,36 @@ public class BDFIClass implements BDFI {
 	}
 
 	@Override
-	public void showPremiere(String idShow) throws HasPremieredException, IdShowDoesNotExistException {
+	public void premiereShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void removeShow(String idShow) throws HasPremieredException, IdShowDoesNotExistException {
+	public void removeShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void rateShow(String idShow, int stars)
+			throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Show infoShow(String idShow) throws IdShowDoesNotExistException {
+		if (shows.isEmpty())
+			throw new IdShowDoesNotExistException();
+		
+		return shows.getFirst();
 	}
 
 }

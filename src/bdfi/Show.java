@@ -2,6 +2,12 @@ package bdfi;
 
 import dataStructures.Iterator;
 
+/**
+ * 
+ * @author Guilherme Santana 60182
+ * @author Pedro Fernandes 60694
+ *
+ */
 public interface Show {
 
 	/**
@@ -29,9 +35,10 @@ public interface Show {
 	 * Finishes production of the show
 	 */
 	void finishProduction();
-	
+
 	/**
-	 * Lists all the tags of the program 
+	 * Lists all the tags of the program
+	 * 
 	 * @return a iterator of tags
 	 */
 	Iterator<String> tagsIterator();

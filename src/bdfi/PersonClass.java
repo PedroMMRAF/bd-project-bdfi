@@ -1,14 +1,20 @@
 package bdfi;
 
+/**
+ * 
+ * @author Guilherme Santana 60182
+ * @author Pedro Fernandes 60694
+ *
+ */
 public class PersonClass implements Person {
 	private String id;
 	private String name;
+	private int birthYear;
+	private Gender gender;
 	private String email;
 	private String phone;
-	private Gender gender;
-	private int birthYear;
 
-	public PersonClass(String id, String name, String email, String phone, Gender gender, int birthYear) {
+	public PersonClass(String id, String name, int birthYear, Gender gender, String email, String phone) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -28,13 +34,8 @@ public class PersonClass implements Person {
 	}
 
 	@Override
-	public String getEmail() {
-		return email;
-	}
-
-	@Override
-	public String getPhone() {
-		return phone;
+	public int getBirthYear() {
+		return birthYear;
 	}
 
 	@Override
@@ -43,8 +44,12 @@ public class PersonClass implements Person {
 	}
 
 	@Override
-	public int getBirthYear() {
-		return birthYear;
+	public String getEmail() {
+		return email;
 	}
 
+	@Override
+	public String getPhone() {
+		return phone;
+	}
 }
