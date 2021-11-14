@@ -1,150 +1,213 @@
 package bdfi;
 
-import dataStructures.*;
 import bdfi.exceptions.*;
+import dataStructures.DoubleList;
+import dataStructures.Iterator;
+import dataStructures.List;
 
 /**
- * 
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
- *
  */
 public class BDFIClass implements BDFI {
+    // Rating score limits
+    private static final int RATING_MIN = 0;
+    private static final int RATING_MAX = 10;
 
-	private int currentYear;
-	private List<Person> people;
-	private List<Show> shows; 
+    // Instance variables
+    protected int currentYear;
+    protected List<Person> people;
+    protected List<Show> shows;
 
-	public BDFIClass(int currentYear) {
-		this.currentYear = currentYear;
-		this.people = new DoubleList<>();
-		this.shows = new DoubleList<>();
-	}
+    /**
+     * Database constructor
+     *
+     * @param currentYear - the currently ongoing year
+     */
+    public BDFIClass(int currentYear) {
+        this.currentYear = currentYear;
+        this.people = new DoubleList<>();
+        this.shows = new DoubleList<>();
+    }
 
-	@Override
-	public void addPerson(String idPerson, String name, int bYear, String gender, String email, String phone)
-			throws InvalidYearException, InvalidGenderException {
-		if (bYear < 0 && bYear > currentYear)
-			throw new InvalidYearException();
+    @Override
+    public void addPerson(String idPerson, String name, int bYear, String gender, String email,
+                          String phone)
+            throws InvalidYearException, InvalidGenderException {
+        if (bYear < 0 && bYear > currentYear)
+            throw new InvalidYearException();
 
-		if (gender == null)
-			throw new InvalidGenderException();
+        if (gender == null)
+            throw new InvalidGenderException();
 
-		people.addLast(new PersonClass(idPerson, name, bYear, gender, email, phone));
-	}
+        people.addLast(new PersonClass(idPerson, name, bYear, gender, email, phone));
+    }
 
-	@Override
-	public void addShow(String idShow, int pYear, String title) throws InvalidYearException {
-		if (pYear > currentYear)
-			throw new InvalidYearException();
+    @Override
+    public void addShow(String idShow, int pYear, String title) throws InvalidYearException {
+        if (pYear > currentYear)
+            throw new InvalidYearException();
 
-		shows.addLast(new ShowClass(idShow, title, pYear, pYear == currentYear));
-	}
+        shows.addLast(new ShowClass(idShow, title, pYear, pYear != currentYear));
+    }
 
-	private Person getPerson(String idPerson) throws IdPersonDoesNotExistException {
-		int pos = people.find(new PersonClass(idPerson, null, 0, null, null, null));
-		
-		if (pos == -1)
-			throw new IdPersonDoesNotExistException();
-		
-		return people.get(pos);
-	}
+    @Override
+    public void addParticipation(String idPerson, String idShow, String description)
+            throws IdPersonDoesNotExistException, IdShowDoesNotExistException {
+        Person person = getPerson(idPerson);
 
-	private Show getShow(String idShow) throws IdShowDoesNotExistException {
-		int pos = shows.find(new ShowClass(idShow, null, 0, false));
-		
-		if (pos == -1)
-			throw new IdShowDoesNotExistException();
-		
-		return shows.get(pos);
-	}
+        Show show = getShow(idShow);
 
-	@Override
-	public void addParticipation(String idPerson, String idShow, String description)
-			throws IdPersonDoesNotExistException, IdShowDoesNotExistException {
-		Person person = getPerson(idPerson);
-		
-		Show show = getShow(idShow);
-		
-		person.addShow(show);
-		show.addParticipant(person);
-	}
+        person.addShow(show);
+        show.addParticipant(person);
+    }
 
-	@Override
-	public void premiereShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
-		Show show = getShow(idShow);
-		if(!show.isProducing())
-			throw new HasPremieredException();
-		show.finishProduction();
-		
+    @Override
+    public void premiereShow(String idShow)
+            throws IdShowDoesNotExistException, HasPremieredException {
+        Show show = getShow(idShow);
 
-	}
+        if (show.hasPremiered())
+            throw new HasPremieredException();
 
-	@Override
-	public void removeShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
-		Show show = getShow(idShow);
-		if(!show.isProducing())
-			throw new HasPremieredException();
-		shows.remove(show);
+        show.premiere();
+    }
 
-	}
+    @Override
+    public void removeShow(String idShow)
+            throws IdShowDoesNotExistException, HasPremieredException {
+        Show show = getShow(idShow);
 
-	@Override
-	public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
-		Show show = getShow(idShow);
-		show.addTag(tag);
+        if (show.hasPremiered())
+            throw new HasPremieredException();
 
-	}
+        shows.remove(show);
+    }
 
-	@Override
-	public void rateShow(String idShow, int stars)
-			throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException {
-		Show show = getShow(idShow);
-		show.addRating(stars);
+    @Override
+    public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
+        getShow(idShow).addTag(tag);
+    }
 
-	}
+    @Override
+    public void rateShow(String idShow, int stars)
+            throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException {
+        if (stars < RATING_MIN || stars > RATING_MAX)
+            throw new InvalidRatingException();
 
-	@Override
-	public Show infoShow(String idShow) throws IdShowDoesNotExistException {
-		Show show = getShow(idShow);
-		return show;
-	}
+        Show show = getShow(idShow);
 
-	@Override
-	public Person infoPerson(String idPerson) throws IdPersonDoesNotExistException {
-		Person person = getPerson(idPerson);
-		return person;
-	}
+        if (!show.hasPremiered())
+            throw new HasPremieredException();
 
-	@Override
-	public Show listPersonShows(String idPerson) throws IdPersonDoesNotExistException, PersonHasNoShowsException {
-		Person person = getPerson(idPerson);
-		return person.showsIterator();
-	}
+        show.addRating(stars);
+    }
 
-	@Override
-	public Iterator<Person> listPersonInShow(String idShow) throws IdShowDoesNotExistException, ShowHasNoParticipants {
-		Show show = getShow(idShow);
-		return show.listParticipants();
-	}
+    @Override
+    public Show infoShow(String idShow) throws IdShowDoesNotExistException {
+        return getShow(idShow);
+    }
 
-	@Override
-	public Show listBestShows() throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Person infoPerson(String idPerson) throws IdPersonDoesNotExistException {
+        return getPerson(idPerson);
+    }
 
-	@Override
-	public Show listShows(int rating)
-			throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Show listPersonShows(String idPerson)
+            throws IdPersonDoesNotExistException, PersonHasNoShowsException {
+        return getPerson(idPerson).listShows();
+    }
 
-	@Override
-	public Show listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Iterator<Person> listPersonInShow(String idShow)
+            throws IdShowDoesNotExistException, ShowHasNoParticipantsException {
+        return getShow(idShow).listParticipants();
+    }
+
+    @Override
+    public Show listBestShows()
+            throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
+        if (shows.isEmpty())
+            throw new NoShowsInSystemException();
+
+        Show show = shows.getFirst();
+
+        if (!show.hasPremiered())
+            throw new NoShowsPremieredException();
+
+        if (!show.hasRatings())
+            throw new NoRatedShowsException();
+
+        return show;
+    }
+
+    @Override
+    public Show listShows(int rating)
+            throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
+            NoRatedShowsException {
+        if (rating < RATING_MIN || rating > RATING_MAX)
+            throw new InvalidRatingException();
+
+        if (shows.isEmpty())
+            throw new NoShowsInSystemException();
+
+        Show show = shows.getLast();
+
+        if (!show.hasPremiered())
+            throw new NoShowsPremieredException();
+
+        if (!show.hasRatings())
+            throw new NoRatedShowsException();
+
+        return show.getRating() == rating ? show : null;
+    }
+
+    @Override
+    public Show listTaggedShows(String tag)
+            throws NoShowsInSystemException, NoTaggedShowsException {
+        if (shows.isEmpty())
+            throw new NoShowsInSystemException();
+
+        Show show = shows.getLast();
+
+        if (!show.hasTag(tag))
+            throw new NoTaggedShowsException();
+
+        return show;
+    }
+
+    /**
+     * Auxilary method for retrieving a professional from the database
+     *
+     * @param idPerson - the professional's unique identifier
+     * @return a professional
+     * @throws IdPersonDoesNotExistException if the professional does not exist
+     */
+    private Person getPerson(String idPerson) throws IdPersonDoesNotExistException {
+        int pos = people.find(new PersonClass(idPerson, null, 0, null, null, null));
+
+        if (pos == -1)
+            throw new IdPersonDoesNotExistException();
+
+        return people.get(pos);
+    }
+
+    /**
+     * Auxilary method for retrieving a show from the database
+     *
+     * @param idShow - the show's unique identifier
+     * @return a show
+     * @throws IdShowDoesNotExistException if the show does not exist
+     */
+    private Show getShow(String idShow) throws IdShowDoesNotExistException {
+        int pos = shows.find(new ShowClass(idShow, null, 0, false));
+
+        if (pos == -1)
+            throw new IdShowDoesNotExistException();
+
+        return shows.get(pos);
+    }
+
 
 }
