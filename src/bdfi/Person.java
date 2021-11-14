@@ -1,5 +1,7 @@
 package bdfi;
 
+import bdfi.exceptions.PersonHasNoShowsException;
+
 /**
  * 
  * @author Guilherme Santana 60182
@@ -42,8 +44,9 @@ public interface Person {
 	 * TODO: DISCUTIR IMPLEMENTACAO
 	 * 
 	 * @return a iterator with all the person's shows
+	 * @throws PersonHasNoShowsException if person isn't involved in any show
 	 */
-	Show showsIterator();
+	Show showsIterator() throws PersonHasNoShowsException;
 	
 	/**
 	 * Adds a show where the person participate

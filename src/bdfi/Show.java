@@ -30,6 +30,12 @@ public interface Show {
 	 *         <code>false</code> otherwise
 	 */
 	boolean isProducing();
+	
+	/**
+	 * Adds a keyword to the show
+	 * @param tag -  is the keyword added
+	 */
+	void addTag(String tag);
 
 	/**
 	 * Lists all the tags of the program
@@ -49,10 +55,18 @@ public interface Show {
 	void finishProduction();
 	
 	/**
+	 * Adds one rating on the show
+	 * @param  - stars is the rating added to the show
+	 */
+	public void addRating(int stars);
+	
+	/**
 	 * Adds a participant to the show
 	 * 
 	 * @param person - the participant to add
 	 */
 	void addParticipant(Person person);
+	
+	Iterator<Person> listParticipants();
 
 }

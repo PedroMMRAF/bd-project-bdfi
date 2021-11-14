@@ -1,5 +1,7 @@
 package bdfi;
 
+import bdfi.exceptions.PersonHasNoShowsException;
+
 /**
  * 
  * @author Guilherme Santana 60182
@@ -61,7 +63,9 @@ public class PersonClass implements Person {
 	}
 
 	@Override
-	public Show showsIterator() {
+	public Show showsIterator() throws PersonHasNoShowsException {
+		if(show == null)
+			throw new PersonHasNoShowsException();
 		return show;
 	}
 

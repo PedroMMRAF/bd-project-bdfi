@@ -48,6 +48,12 @@ public class ShowClass implements Show {
 	public boolean isProducing() {
 		return producing;
 	}
+	
+	@Override
+	public void addTag(String tag) {
+		tags.addLast(tag);
+		
+	}
 
 	@Override
 	public Iterator<String> tagsIterator() {
@@ -88,6 +94,11 @@ public class ShowClass implements Show {
 	@Override
 	public void addParticipant(Person person) {
 		participants.addLast(person);
+	}
+	
+	@Override
+	public Iterator<Person> listParticipants() {
+		return participants.iterator();
 	}
 	
 	

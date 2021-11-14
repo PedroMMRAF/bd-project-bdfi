@@ -13,7 +13,7 @@ public class BDFIClass implements BDFI {
 
 	private int currentYear;
 	private List<Person> people;
-	private List<Show> shows;
+	private List<Show> shows; 
 
 	public BDFIClass(int currentYear) {
 		this.currentYear = currentYear;
@@ -72,53 +72,60 @@ public class BDFIClass implements BDFI {
 
 	@Override
 	public void premiereShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
-		// TODO Auto-generated method stub
+		Show show = getShow(idShow);
+		if(!show.isProducing())
+			throw new HasPremieredException();
+		show.finishProduction();
+		
 
 	}
 
 	@Override
 	public void removeShow(String idShow) throws IdShowDoesNotExistException, HasPremieredException {
-		// TODO Auto-generated method stub
+		Show show = getShow(idShow);
+		if(!show.isProducing())
+			throw new HasPremieredException();
+		shows.remove(show);
 
 	}
 
 	@Override
 	public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
-		// TODO Auto-generated method stub
+		Show show = getShow(idShow);
+		show.addTag(tag);
 
 	}
 
 	@Override
 	public void rateShow(String idShow, int stars)
 			throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException {
-		// TODO Auto-generated method stub
+		Show show = getShow(idShow);
+		show.addRating(stars);
 
 	}
 
 	@Override
 	public Show infoShow(String idShow) throws IdShowDoesNotExistException {
-		if (shows.isEmpty())
-			throw new IdShowDoesNotExistException();
-
-		return shows.getFirst();
+		Show show = getShow(idShow);
+		return show;
 	}
 
 	@Override
 	public Person infoPerson(String idPerson) throws IdPersonDoesNotExistException {
-		// TODO Auto-generated method stub
-		return null;
+		Person person = getPerson(idPerson);
+		return person;
 	}
 
 	@Override
 	public Show listPersonShows(String idPerson) throws IdPersonDoesNotExistException, PersonHasNoShowsException {
-		// TODO Auto-generated method stub
-		return null;
+		Person person = getPerson(idPerson);
+		return person.showsIterator();
 	}
 
 	@Override
 	public Iterator<Person> listPersonInShow(String idShow) throws IdShowDoesNotExistException, ShowHasNoParticipants {
-		// TODO Auto-generated method stub
-		return null;
+		Show show = getShow(idShow);
+		return show.listParticipants();
 	}
 
 	@Override
