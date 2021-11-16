@@ -70,7 +70,7 @@ public class BDFIClass implements BDFI {
         ShowBDFI show = getShow(idShow);
 
         person.addShow(show);
-        show.addParticipant(person);
+        show.addParticipant(new ParticipantClass(person, description));
     }
 
     @Override
@@ -125,13 +125,13 @@ public class BDFIClass implements BDFI {
     }
 
     @Override
-    public Show listPersonShows(String idPerson)
+    public Show listShowsPerson(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException {
         return getPerson(idPerson).listShows();
     }
 
     @Override
-    public Iterator<Person> listPersonInShow(String idShow)
+    public Iterator<Participant> listParticipations(String idShow)
             throws IdShowDoesNotExistException, ShowHasNoParticipantsException {
         return getShow(idShow).listParticipants();
     }
