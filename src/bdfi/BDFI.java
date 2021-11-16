@@ -93,7 +93,7 @@ public interface BDFI {
      * required
      * @throws IdShowDoesNotExistException if idShow doesn't exist
      */
-    Show infoShow(String idShow) throws IdShowDoesNotExistException;
+    ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException;
 
     /**
      * TODO: Considerar trocar isto por metodos mais especificos
@@ -103,7 +103,7 @@ public interface BDFI {
      * required
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      */
-    Person infoPerson(String idPerson) throws IdPersonDoesNotExistException;
+    PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException;
 
     /**
      * Lists all the shows where the person in the system are involved

@@ -9,14 +9,14 @@ import dataStructures.List;
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public class ShowClass implements Show {
+public class ShowClass implements ShowBDFI {
     // Instance variables
     protected String id;
     protected String title;
     protected int prodYear;
     protected boolean premiered;
     protected List<String> tags;
-    protected List<Person> participants;
+    protected List<PersonBDFI> participants;
     protected int ratingCount;
     protected int rating;
 
@@ -91,12 +91,12 @@ public class ShowClass implements Show {
     }
 
     @Override
-    public void addParticipant(Person person) {
+    public void addParticipant(PersonBDFI person) {
         participants.addLast(person);
     }
 
     public void addRating(int stars) {
-        rating = Math.round((stars + ratingCount * rating) / ((float) (rating + 1)));
+        rating = bdfiAlg.updateReview(stars, ratingCount, rating);
         ratingCount++;
     }
 

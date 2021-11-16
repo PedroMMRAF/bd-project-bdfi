@@ -1,13 +1,10 @@
 package bdfi;
 
-import bdfi.exceptions.ShowHasNoParticipantsException;
-import dataStructures.Iterator;
-
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface Show extends ShowMain {
+interface ShowBDFI extends Show {
 
     /**
      * Finishes production of the show
@@ -26,7 +23,7 @@ public interface Show extends ShowMain {
      *
      * @param person - the participant to add
      */
-    void addParticipant(Person person);
+    void addParticipant(PersonBDFI person);
 
     /**
      * Adds one rating on the show

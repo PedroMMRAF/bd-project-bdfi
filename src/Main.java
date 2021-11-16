@@ -1,7 +1,4 @@
-import bdfi.BDFI;
-import bdfi.BDFIClass;
-import bdfi.Person;
-import bdfi.Show;
+import bdfi.*;
 import bdfi.exceptions.*;
 import dataStructures.Iterator;
 
@@ -108,6 +105,8 @@ public class Main {
      * otherwise
      */
     private static boolean runCommands(Scanner in, BDFI bdfi) {
+        boolean ret = true;
+
         switch (getCommand(in)) {
             case ADDPERSON:
                 addPerson(in, bdfi);
@@ -154,15 +153,17 @@ public class Main {
             case QUIT:
                 quit(bdfi);
                 // Returning false ends command execution
-                return false;
+                ret = false;
             case UNKNOWN:
                 System.out.print(UNKNOWN_COMMAND);
                 in.nextLine();
                 break;
         }
 
+        System.out.println();
+
         // Returning true continues command execution
-        return true;
+        return ret;
     }
 
     private static void printShow(Show show) {
@@ -394,7 +395,6 @@ public class Main {
 
         try {
             Show show = bdfi.listPersonShows(idPerson);
-
             printShow(show);
         }
         catch (IdPersonDoesNotExistException e) {
@@ -420,7 +420,6 @@ public class Main {
 
             while (people.hasNext())
                 printPerson(people.next());
-
         }
         catch (IdShowDoesNotExistException e) {
             System.out.print(SHOW_MISSING);
@@ -472,7 +471,6 @@ public class Main {
                 System.out.print(NO_SHOWS_WITH_RATING);
             else
                 printShow(show);
-
         }
         catch (InvalidRatingException e) {
             System.out.print(INVALID_RATING);
@@ -504,7 +502,6 @@ public class Main {
                 System.out.print(NO_SHOWS_WITH_TAG);
             else
                 printShow(show);
-
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
