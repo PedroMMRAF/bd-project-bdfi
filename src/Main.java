@@ -85,15 +85,10 @@ public class Main {
     private static String getGender(Scanner in) {
         String gender = in.next().toLowerCase();
 
-        switch (gender) {
-            case MALE:
-            case FEMALE:
-            case OTHER:
-            case NOT_PROVIDED:
-                return gender.substring(0, 1).toUpperCase() + gender.substring(1);
-            default:
-                return null;
-        }
+        return switch (gender) {
+            case MALE, FEMALE, OTHER, NOT_PROVIDED -> gender.substring(0, 1).toUpperCase() + gender.substring(1);
+            default -> null;
+        };
     }
 
     /**
@@ -151,9 +146,10 @@ public class Main {
                 listTaggedShows(in, bdfi);
                 break;
             case QUIT:
-                quit(bdfi);
+                quit(in, bdfi);
                 // Returning false ends command execution
                 ret = false;
+                break;
             case UNKNOWN:
                 System.out.print(UNKNOWN_COMMAND);
                 in.nextLine();
@@ -201,6 +197,9 @@ public class Main {
         catch (InvalidGenderException e) {
             System.out.print(INVALID_GENDER);
         }
+        catch (IdPersonExistsException e) {
+            System.out.print(PERSON_EXISTS);
+        }
     }
 
     /**
@@ -220,6 +219,9 @@ public class Main {
         }
         catch (InvalidYearException e) {
             System.out.print(INVALID_YEAR);
+        }
+        catch (IdShowExistsException e) {
+            System.out.print(SHOW_EXISTS);
         }
     }
 
@@ -514,9 +516,12 @@ public class Main {
     /**
      * Serializes the database before finishing the program
      *
+     * @param in   - system in scanner
      * @param bdfi - database object
      */
-    private static void quit(BDFI bdfi) {
+    private static void quit(Scanner in, BDFI bdfi) {
+        in.nextLine();
+
         System.out.print(QUIT_MESSAGE);
     }
 

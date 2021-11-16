@@ -33,22 +33,33 @@ public class BDFIClass implements BDFI {
     @Override
     public void addPerson(String idPerson, String name, int bYear, String gender, String email,
                           String phone)
-            throws InvalidYearException, InvalidGenderException {
+            throws InvalidYearException, InvalidGenderException, IdPersonExistsException {
         if (bYear < 0 || bYear > currentYear)
             throw new InvalidYearException();
 
         if (gender == null)
             throw new InvalidGenderException();
 
-        people.addLast(new PersonClass(idPerson, name, bYear, gender, email, phone));
+        PersonBDFI person = new PersonClass(idPerson, name, bYear, gender, email, phone);
+
+        if (people.find(person) > -1)
+            throw new IdPersonExistsException();
+
+        people.addLast(person);
     }
 
     @Override
-    public void addShow(String idShow, int pYear, String title) throws InvalidYearException {
+    public void addShow(String idShow, int pYear, String title)
+            throws InvalidYearException, IdShowExistsException {
         if (pYear < 0 || pYear > currentYear)
             throw new InvalidYearException();
 
-        shows.addLast(new ShowClass(idShow, title, pYear, pYear != currentYear));
+        ShowBDFI show = new ShowClass(idShow, title, pYear, pYear != currentYear);
+
+        if (shows.find(show) > -1)
+            throw new IdShowExistsException();
+
+        shows.addLast(show);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class ShowClass implements ShowBDFI {
     protected int prodYear;
     protected boolean premiered;
     protected List<String> tags;
-    protected List<PersonBDFI> participants;
+    protected List<Person> participants;
     protected int ratingCount;
     protected int rating;
 

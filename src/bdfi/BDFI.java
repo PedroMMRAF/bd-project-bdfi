@@ -22,7 +22,7 @@ public interface BDFI {
      */
     void addPerson(String idPerson, String name, int bYear, String gender, String email,
                    String phone)
-            throws InvalidYearException, InvalidGenderException;
+            throws InvalidYearException, InvalidGenderException, IdPersonExistsException;
 
     /**
      * Inserts a new show in the system
@@ -32,7 +32,8 @@ public interface BDFI {
      * @param title  - the show's title
      * @throws InvalidYearException if the provided year exceeds the current year
      */
-    void addShow(String idShow, int pYear, String title) throws InvalidYearException;
+    void addShow(String idShow, int pYear, String title)
+            throws InvalidYearException, IdShowExistsException;
 
     /**
      * Include the participation of some professional onto a show
