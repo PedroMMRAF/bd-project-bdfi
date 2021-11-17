@@ -2,11 +2,13 @@ package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
 
+import java.io.Serializable;
+
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface Person {
+public interface Person extends Serializable {
 
     /**
      * @return the person's id

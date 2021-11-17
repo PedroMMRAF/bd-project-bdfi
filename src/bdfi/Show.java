@@ -3,11 +3,13 @@ package bdfi;
 import bdfi.exceptions.ShowHasNoParticipantsException;
 import dataStructures.Iterator;
 
+import java.io.Serializable;
+
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface Show {
+public interface Show extends Serializable {
 
     /**
      * @return the show's unique identifier
@@ -48,7 +50,7 @@ public interface Show {
      * @return an iterator of participants
      * @throws ShowHasNoParticipantsException if no participants are present
      */
-    Iterator<Person> listParticipants() throws ShowHasNoParticipantsException;
+    Iterator<Participant> listParticipants() throws ShowHasNoParticipantsException;
 
     /**
      * @return <code>true</code> if the show has ratings, <code>false</code> otherwise

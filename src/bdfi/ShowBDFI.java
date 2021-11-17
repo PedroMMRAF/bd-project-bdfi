@@ -21,9 +21,9 @@ interface ShowBDFI extends Show {
     /**
      * Adds a participant to the show
      *
-     * @param person - the participant to add
+     * @param participant - the participant to add
      */
-    void addParticipant(PersonBDFI person);
+    void addParticipant(Participant participant);
 
     /**
      * Adds one rating on the show
