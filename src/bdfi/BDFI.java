@@ -3,11 +3,13 @@ package bdfi;
 import bdfi.exceptions.*;
 import dataStructures.Iterator;
 
+import java.io.Serializable;
+
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface BDFI {
+public interface BDFI extends Serializable {
 
     /**
      * Inserts a new professional in the system
@@ -22,7 +24,7 @@ public interface BDFI {
      */
     void addPerson(String idPerson, String name, int bYear, String gender, String email,
                    String phone)
-            throws InvalidYearException, InvalidGenderException;
+            throws InvalidYearException, InvalidGenderException, IdPersonExistsException;
 
     /**
      * Inserts a new show in the system
@@ -32,7 +34,8 @@ public interface BDFI {
      * @param title  - the show's title
      * @throws InvalidYearException if the provided year exceeds the current year
      */
-    void addShow(String idShow, int pYear, String title) throws InvalidYearException;
+    void addShow(String idShow, int pYear, String title)
+            throws InvalidYearException, IdShowExistsException;
 
     /**
      * Include the participation of some professional onto a show
@@ -93,7 +96,7 @@ public interface BDFI {
      * required
      * @throws IdShowDoesNotExistException if idShow doesn't exist
      */
-    Show infoShow(String idShow) throws IdShowDoesNotExistException;
+    ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException;
 
     /**
      * TODO: Considerar trocar isto por metodos mais especificos
@@ -103,7 +106,7 @@ public interface BDFI {
      * required
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      */
-    Person infoPerson(String idPerson) throws IdPersonDoesNotExistException;
+    PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException;
 
     /**
      * Lists all the shows where the person in the system are involved
@@ -113,7 +116,7 @@ public interface BDFI {
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws PersonHasNoShowsException     if person isn't involved in any show
      */
-    Show listPersonShows(String idPerson)
+    Show listShowsPerson(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException;
 
     /**
@@ -125,7 +128,7 @@ public interface BDFI {
      * @throws ShowHasNoParticipantsException if the show doesn't have any person
      *                                        participating in it
      */
-    Iterator<Person> listPersonInShow(String idShow)
+    Iterator<Participant> listParticipations(String idShow)
             throws IdShowDoesNotExistException, ShowHasNoParticipantsException;
 
     /**

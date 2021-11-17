@@ -6,7 +6,7 @@ import bdfi.exceptions.PersonHasNoShowsException;
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public class PersonClass implements Person {
+public class PersonClass implements PersonBDFI {
     // Instance variables
     protected String id;
     protected String name;
@@ -14,7 +14,7 @@ public class PersonClass implements Person {
     protected String gender;
     protected String email;
     protected String phone;
-    protected Show show;        //primeira fase apenas tem um programa
+    protected ShowBDFI show;        //primeira fase apenas tem um programa
 
     public PersonClass(String id, String name, int birthYear, String gender, String email,
                        String phone) {
@@ -65,7 +65,7 @@ public class PersonClass implements Person {
     }
 
     @Override
-    public void addShow(Show show) {
+    public void addShow(ShowBDFI show) {
         this.show = show;
     }
 
@@ -74,6 +74,6 @@ public class PersonClass implements Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonClass that = (PersonClass) o;
-        return id.equals(that.id);
+        return id.equalsIgnoreCase(that.id);
     }
 }

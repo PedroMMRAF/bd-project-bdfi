@@ -16,8 +16,8 @@ public class BDFIClass implements BDFI {
 
     // Instance variables
     protected int currentYear;
-    protected List<Person> people;
-    protected List<Show> shows;
+    protected List<PersonBDFI> people;
+    protected List<ShowBDFI> shows;
 
     /**
      * Database constructor
@@ -33,39 +33,50 @@ public class BDFIClass implements BDFI {
     @Override
     public void addPerson(String idPerson, String name, int bYear, String gender, String email,
                           String phone)
-            throws InvalidYearException, InvalidGenderException {
-        if (bYear < 0 && bYear > currentYear)
+            throws InvalidYearException, InvalidGenderException, IdPersonExistsException {
+        if (bYear < 0 || bYear > currentYear)
             throw new InvalidYearException();
 
         if (gender == null)
             throw new InvalidGenderException();
 
-        people.addLast(new PersonClass(idPerson, name, bYear, gender, email, phone));
+        PersonBDFI person = new PersonClass(idPerson, name, bYear, gender, email, phone);
+
+        if (people.find(person) > -1)
+            throw new IdPersonExistsException();
+
+        people.addLast(person);
     }
 
     @Override
-    public void addShow(String idShow, int pYear, String title) throws InvalidYearException {
-        if (pYear > currentYear)
+    public void addShow(String idShow, int pYear, String title)
+            throws InvalidYearException, IdShowExistsException {
+        if (pYear < 0 || pYear > currentYear)
             throw new InvalidYearException();
 
-        shows.addLast(new ShowClass(idShow, title, pYear, pYear != currentYear));
+        ShowBDFI show = new ShowClass(idShow, title, pYear, pYear != currentYear);
+
+        if (shows.find(show) > -1)
+            throw new IdShowExistsException();
+
+        shows.addLast(show);
     }
 
     @Override
     public void addParticipation(String idPerson, String idShow, String description)
             throws IdPersonDoesNotExistException, IdShowDoesNotExistException {
-        Person person = getPerson(idPerson);
+        PersonBDFI person = getPerson(idPerson);
 
-        Show show = getShow(idShow);
+        ShowBDFI show = getShow(idShow);
 
         person.addShow(show);
-        show.addParticipant(person);
+        show.addParticipant(new ParticipantClass(person, description));
     }
 
     @Override
     public void premiereShow(String idShow)
             throws IdShowDoesNotExistException, HasPremieredException {
-        Show show = getShow(idShow);
+        ShowBDFI show = getShow(idShow);
 
         if (show.hasPremiered())
             throw new HasPremieredException();
@@ -76,7 +87,7 @@ public class BDFIClass implements BDFI {
     @Override
     public void removeShow(String idShow)
             throws IdShowDoesNotExistException, HasPremieredException {
-        Show show = getShow(idShow);
+        ShowBDFI show = getShow(idShow);
 
         if (show.hasPremiered())
             throw new HasPremieredException();
@@ -95,7 +106,7 @@ public class BDFIClass implements BDFI {
         if (stars < RATING_MIN || stars > RATING_MAX)
             throw new InvalidRatingException();
 
-        Show show = getShow(idShow);
+        ShowBDFI show = getShow(idShow);
 
         if (!show.hasPremiered())
             throw new HasPremieredException();
@@ -104,23 +115,23 @@ public class BDFIClass implements BDFI {
     }
 
     @Override
-    public Show infoShow(String idShow) throws IdShowDoesNotExistException {
+    public ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException {
         return getShow(idShow);
     }
 
     @Override
-    public Person infoPerson(String idPerson) throws IdPersonDoesNotExistException {
+    public PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException {
         return getPerson(idPerson);
     }
 
     @Override
-    public Show listPersonShows(String idPerson)
+    public Show listShowsPerson(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException {
         return getPerson(idPerson).listShows();
     }
 
     @Override
-    public Iterator<Person> listPersonInShow(String idShow)
+    public Iterator<Participant> listParticipations(String idShow)
             throws IdShowDoesNotExistException, ShowHasNoParticipantsException {
         return getShow(idShow).listParticipants();
     }
@@ -131,7 +142,7 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        Show show = shows.getFirst();
+        ShowBDFI show = shows.getFirst();
 
         if (!show.hasPremiered())
             throw new NoShowsPremieredException();
@@ -152,7 +163,7 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        Show show = shows.getLast();
+        ShowBDFI show = shows.getLast();
 
         if (!show.hasPremiered())
             throw new NoShowsPremieredException();
@@ -169,7 +180,7 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        Show show = shows.getLast();
+        ShowBDFI show = shows.getLast();
 
         if (!show.hasTag(tag))
             throw new NoTaggedShowsException();
@@ -184,7 +195,7 @@ public class BDFIClass implements BDFI {
      * @return a professional
      * @throws IdPersonDoesNotExistException if the professional does not exist
      */
-    private Person getPerson(String idPerson) throws IdPersonDoesNotExistException {
+    private PersonBDFI getPerson(String idPerson) throws IdPersonDoesNotExistException {
         int pos = people.find(new PersonClass(idPerson, null, 0, null, null, null));
 
         if (pos == -1)
@@ -200,7 +211,7 @@ public class BDFIClass implements BDFI {
      * @return a show
      * @throws IdShowDoesNotExistException if the show does not exist
      */
-    private Show getShow(String idShow) throws IdShowDoesNotExistException {
+    private ShowBDFI getShow(String idShow) throws IdShowDoesNotExistException {
         int pos = shows.find(new ShowClass(idShow, null, 0, false));
 
         if (pos == -1)

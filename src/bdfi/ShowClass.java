@@ -9,14 +9,14 @@ import dataStructures.List;
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public class ShowClass implements Show {
+public class ShowClass implements ShowBDFI {
     // Instance variables
     protected String id;
     protected String title;
     protected int prodYear;
     protected boolean premiered;
     protected List<String> tags;
-    protected List<Person> participants;
+    protected List<Participant> participants;
     protected int ratingCount;
     protected int rating;
 
@@ -62,7 +62,7 @@ public class ShowClass implements Show {
     }
 
     @Override
-    public Iterator<Person> listParticipants()
+    public Iterator<Participant> listParticipants()
             throws ShowHasNoParticipantsException {
         if (participants.isEmpty())
             throw new ShowHasNoParticipantsException();
@@ -91,12 +91,12 @@ public class ShowClass implements Show {
     }
 
     @Override
-    public void addParticipant(Person person) {
-        participants.addLast(person);
+    public void addParticipant(Participant participant) {
+        participants.addLast(participant);
     }
 
     public void addRating(int stars) {
-        rating = Math.round((stars + ratingCount * rating) / ((float) (rating + 1)));
+        rating = bdfiAlg.updateReview(stars, ratingCount, rating);
         ratingCount++;
     }
 
@@ -105,6 +105,6 @@ public class ShowClass implements Show {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShowClass showClass = (ShowClass) o;
-        return id.equals(showClass.id);
+        return id.equalsIgnoreCase(showClass.id);
     }
 }

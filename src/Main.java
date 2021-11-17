@@ -1,10 +1,8 @@
-import bdfi.BDFI;
-import bdfi.BDFIClass;
-import bdfi.Person;
-import bdfi.Show;
+import bdfi.*;
 import bdfi.exceptions.*;
 import dataStructures.Iterator;
 
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -15,6 +13,9 @@ public class Main {
     // Current year to be used by the constructor of the database
     private static final int CURRENT_YEAR = 2021;
 
+    // BDFI save data file name
+    private static final String DATA_FILE = "bdfi.dat";
+
     // Gender names
     private static final String MALE = "male";
     private static final String FEMALE = "female";
@@ -23,26 +24,27 @@ public class Main {
 
     // Success messages
     private static final String PERSON_ADDED = "Person added.\n";
-    private static final String PERSON_FORMAT = "%s %s %d %s %s %s";
+    private static final String PERSON_FORMAT = "%s %s %d %s %s %s\n";
+    private static final String PARTICIPANT_FORMAT = "%s %s %d %s %s %s %s\n";
     private static final String PARTICIPATION_ADDED = "Participation added.\n";
     private static final String SHOW_ADDED = "Show added.\n";
     private static final String SHOW_PREMIERED = "Successful production.\n";
     private static final String SHOW_REMOVED = "Show removed.\n";
     private static final String SHOW_TAGGED = "Tag added.\n";
-    private static final String SHOW_FORMAT = "%s %s %d %d.\n";
+    private static final String SHOW_FORMAT = "%s %s %d %d\n";
     private static final String SHOW_RATED = "Rating applied.\n";
 
     // Error messages
     private static final String UNKNOWN_COMMAND = "Unknown command.\n";
     private static final String INVALID_YEAR = "Invalid year.\n";
     private static final String INVALID_GENDER = "Invalid gender information.\n";
-    private static final String INVALID_RATING = "Invalid Rating.";
+    private static final String INVALID_RATING = "Invalid Rating.\n";
     private static final String PERSON_EXISTS = "idPerson exists.\n";
     private static final String PERSON_MISSING = "idPerson does not exist.\n";
     private static final String PERSON_NO_SHOWS = "idPerson has no shows.\n";
     private static final String SHOW_EXISTS = "idShow exists.\n";
     private static final String SHOW_MISSING = "idShow does not exist.\n";
-    private static final String SHOW_ALREADY_PREMIERED = "%s has already completed production.\n";
+    private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed production.\n";
     private static final String SHOW_NOT_PREMIERED = "idShow is in production.\n";
     private static final String SHOW_NO_PEOPLE = "idShow has no participations.\n";
     private static final String NO_SHOWS = "No shows.\n";
@@ -58,10 +60,50 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        BDFI bdfi = new BDFIClass(CURRENT_YEAR);
+        BDFI bdfi = loadBDFI();
 
         // Run until false is returned, meaning execution ended
         while (runCommands(in, bdfi)) ;
+    }
+
+    /**
+     * @return
+     */
+    private static BDFI loadBDFI() {
+        BDFI bdfi = new BDFIClass(CURRENT_YEAR);
+
+        try {
+            FileInputStream fp = new FileInputStream(DATA_FILE);
+            ObjectInputStream op = new ObjectInputStream(fp);
+
+            bdfi = (BDFIClass) op.readObject();
+
+            op.close();
+            fp.close();
+        }
+        catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return bdfi;
+    }
+
+    /**
+     * @param bdfi - database object
+     */
+    private static void saveBDFI(BDFI bdfi) {
+        try {
+            FileOutputStream fp = new FileOutputStream(DATA_FILE);
+            ObjectOutputStream op = new ObjectOutputStream(fp);
+
+            op.writeObject(bdfi);
+
+            op.close();
+            fp.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -86,17 +128,12 @@ public class Main {
      * @return a gender if any valid match occurs, <code>null</code> otherwise
      */
     private static String getGender(Scanner in) {
-        String gender = in.next().toLowerCase();
+        String gender = in.next();
 
-        switch (gender) {
-            case MALE:
-            case FEMALE:
-            case OTHER:
-            case NOT_PROVIDED:
-                return gender.substring(0, 1).toUpperCase() + gender.substring(1);
-            default:
-                return null;
-        }
+        return switch (gender.toLowerCase()) {
+            case MALE, FEMALE, OTHER, NOT_PROVIDED -> gender;
+            default -> null;
+        };
     }
 
     /**
@@ -108,61 +145,38 @@ public class Main {
      * otherwise
      */
     private static boolean runCommands(Scanner in, BDFI bdfi) {
+        boolean ret = true;
+
         switch (getCommand(in)) {
-            case ADDPERSON:
-                addPerson(in, bdfi);
-                break;
-            case ADDSHOW:
-                addShow(in, bdfi);
-                break;
-            case ADDPARTICIPATION:
-                addParticipation(in, bdfi);
-                break;
-            case PREMIERE:
-                premiere(in, bdfi);
-                break;
-            case REMOVESHOW:
-                removeShow(in, bdfi);
-                break;
-            case TAGSHOW:
-                tagShow(in, bdfi);
-                break;
-            case INFOSHOW:
-                infoShow(in, bdfi);
-                break;
-            case RATESHOW:
-                rateShow(in, bdfi);
-                break;
-            case INFOPERSON:
-                infoPerson(in, bdfi);
-                break;
-            case LISTBESTSHOWS:
-                listBestShows(in, bdfi);
-                break;
-            case LISTPARTICIPATIONS:
-                listParticipations(in, bdfi);
-                break;
-            case LISTSHOWS:
-                listShows(in, bdfi);
-                break;
-            case LISTSHOWSPERSON:
-                listShowsPerson(in, bdfi);
-                break;
-            case LISTTAGGEDSHOWS:
-                listTaggedShows(in, bdfi);
-                break;
-            case QUIT:
-                quit(bdfi);
+            case ADDPERSON -> addPerson(in, bdfi);
+            case ADDSHOW -> addShow(in, bdfi);
+            case ADDPARTICIPATION -> addParticipation(in, bdfi);
+            case PREMIERE -> premiere(in, bdfi);
+            case REMOVESHOW -> removeShow(in, bdfi);
+            case TAGSHOW -> tagShow(in, bdfi);
+            case INFOSHOW -> infoShow(in, bdfi);
+            case RATESHOW -> rateShow(in, bdfi);
+            case INFOPERSON -> infoPerson(in, bdfi);
+            case LISTBESTSHOWS -> listBestShows(in, bdfi);
+            case LISTPARTICIPATIONS -> listParticipations(in, bdfi);
+            case LISTSHOWS -> listShows(in, bdfi);
+            case LISTSHOWSPERSON -> listShowsPerson(in, bdfi);
+            case LISTTAGGEDSHOWS -> listTaggedShows(in, bdfi);
+            case QUIT -> {
+                quit(in, bdfi);
                 // Returning false ends command execution
-                return false;
-            case UNKNOWN:
+                ret = false;
+            }
+            case UNKNOWN -> {
                 System.out.print(UNKNOWN_COMMAND);
                 in.nextLine();
-                break;
+            }
         }
 
+        System.out.println();
+
         // Returning true continues command execution
-        return true;
+        return ret;
     }
 
     private static void printShow(Show show) {
@@ -174,6 +188,12 @@ public class Main {
         System.out.printf(PERSON_FORMAT, person.getId(), person.getName(), person.getBirthYear(),
                 person.getEmail(),
                 person.getPhone(), person.getGender());
+    }
+
+    private static void printParticipant(Participant participant) {
+        System.out.printf(PARTICIPANT_FORMAT, participant.getId(), participant.getName(),
+                participant.getBirthYear(), participant.getEmail(), participant.getPhone(),
+                participant.getGender(), participant.getDescription());
     }
 
     /**
@@ -200,6 +220,9 @@ public class Main {
         catch (InvalidGenderException e) {
             System.out.print(INVALID_GENDER);
         }
+        catch (IdPersonExistsException e) {
+            System.out.print(PERSON_EXISTS);
+        }
     }
 
     /**
@@ -219,6 +242,9 @@ public class Main {
         }
         catch (InvalidYearException e) {
             System.out.print(INVALID_YEAR);
+        }
+        catch (IdShowExistsException e) {
+            System.out.print(SHOW_EXISTS);
         }
     }
 
@@ -322,8 +348,7 @@ public class Main {
         try {
             Show show = bdfi.infoShow(idShow);
 
-            System.out.printf(SHOW_FORMAT, show.getId(), show.getTitle(), show.getProductionYear(),
-                    show.getRating());
+            printShow(show);
 
             Iterator<String> tags = show.listTags();
 
@@ -393,8 +418,7 @@ public class Main {
         in.nextLine();
 
         try {
-            Show show = bdfi.listPersonShows(idPerson);
-
+            Show show = bdfi.listShowsPerson(idPerson);
             printShow(show);
         }
         catch (IdPersonDoesNotExistException e) {
@@ -416,11 +440,10 @@ public class Main {
         in.nextLine();
 
         try {
-            Iterator<Person> people = bdfi.listPersonInShow(idShow);
+            Iterator<Participant> participants = bdfi.listParticipations(idShow);
 
-            while (people.hasNext())
-                printPerson(people.next());
-
+            while (participants.hasNext())
+                printParticipant(participants.next());
         }
         catch (IdShowDoesNotExistException e) {
             System.out.print(SHOW_MISSING);
@@ -472,7 +495,6 @@ public class Main {
                 System.out.print(NO_SHOWS_WITH_RATING);
             else
                 printShow(show);
-
         }
         catch (InvalidRatingException e) {
             System.out.print(INVALID_RATING);
@@ -504,7 +526,6 @@ public class Main {
                 System.out.print(NO_SHOWS_WITH_TAG);
             else
                 printShow(show);
-
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
@@ -517,10 +538,15 @@ public class Main {
     /**
      * Serializes the database before finishing the program
      *
+     * @param in   - system in scanner
      * @param bdfi - database object
      */
-    private static void quit(BDFI bdfi) {
+    private static void quit(Scanner in, BDFI bdfi) {
+        in.nextLine();
+
         System.out.print(QUIT_MESSAGE);
+
+        saveBDFI(bdfi);
     }
 
 }

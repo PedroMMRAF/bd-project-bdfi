@@ -2,11 +2,13 @@ package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
 
+import java.io.Serializable;
+
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface Person {
+public interface Person extends Serializable {
 
     /**
      * @return the person's id
@@ -45,12 +47,5 @@ public interface Person {
      * @throws PersonHasNoShowsException if person isn't involved in any show
      */
     Show listShows() throws PersonHasNoShowsException;
-
-    /**
-     * Adds a show where the person participate
-     *
-     * @param show - show to add
-     */
-    void addShow(Show show);
 
 }
