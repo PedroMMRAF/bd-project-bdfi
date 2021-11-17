@@ -1,6 +1,6 @@
 /bin/
-.idea
-.settings
-.classpath
-.project
-BDFI.iml
+/.idea
+/.settings
+/.classpath
+/.project
+/*.iml
