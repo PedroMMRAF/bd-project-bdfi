@@ -44,7 +44,8 @@ public class Main {
     private static final String PERSON_NO_SHOWS = "idPerson has no shows.\n";
     private static final String SHOW_EXISTS = "idShow exists.\n";
     private static final String SHOW_MISSING = "idShow does not exist.\n";
-    private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed production.\n";
+    private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed " +
+            "production" + ".\n";
     private static final String SHOW_NOT_PREMIERED = "idShow is in production.\n";
     private static final String SHOW_NO_PEOPLE = "idShow has no participations.\n";
     private static final String NO_SHOWS = "No shows.\n";
@@ -60,16 +61,18 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        BDFI bdfi = loadBDFI();
+        BDFI bdfi = loadData();
 
         // Run until false is returned, meaning execution ended
         while (runCommands(in, bdfi)) ;
     }
 
     /**
-     * @return
+     * Loads a database object from a file, or creates a new one
+     *
+     * @return the loaded database instance if it existed, a new one otherwise
      */
-    private static BDFI loadBDFI() {
+    private static BDFI loadData() {
         BDFI bdfi = new BDFIClass(CURRENT_YEAR);
 
         try {
@@ -89,9 +92,11 @@ public class Main {
     }
 
     /**
+     * Saves a database object into a file
+     *
      * @param bdfi - database object
      */
-    private static void saveBDFI(BDFI bdfi) {
+    private static void saveData(BDFI bdfi) {
         try {
             FileOutputStream fp = new FileOutputStream(DATA_FILE);
             ObjectOutputStream op = new ObjectOutputStream(fp);
@@ -179,17 +184,31 @@ public class Main {
         return ret;
     }
 
+    /**
+     * Prints information of a show
+     *
+     * @param show - the show to print the information of
+     */
     private static void printShow(Show show) {
         System.out.printf(SHOW_FORMAT, show.getId(), show.getTitle(), show.getProductionYear(),
                 show.getRating());
     }
 
+    /**
+     * Prints information of a person
+     *
+     * @param person - the person to print the information of
+     */
     private static void printPerson(Person person) {
         System.out.printf(PERSON_FORMAT, person.getId(), person.getName(), person.getBirthYear(),
-                person.getEmail(),
-                person.getPhone(), person.getGender());
+                person.getEmail(), person.getPhone(), person.getGender());
     }
 
+    /**
+     * Prints information of a participant
+     *
+     * @param participant - the participant to print the information of
+     */
     private static void printParticipant(Participant participant) {
         System.out.printf(PARTICIPANT_FORMAT, participant.getId(), participant.getName(),
                 participant.getBirthYear(), participant.getEmail(), participant.getPhone(),
@@ -398,9 +417,7 @@ public class Main {
         in.nextLine();
 
         try {
-            Person person = bdfi.infoPerson(idPerson);
-
-            printPerson(person);
+            printPerson(bdfi.infoPerson(idPerson));
         }
         catch (IdPersonDoesNotExistException e) {
             System.out.print(PERSON_MISSING);
@@ -418,8 +435,7 @@ public class Main {
         in.nextLine();
 
         try {
-            Show show = bdfi.listShowsPerson(idPerson);
-            printShow(show);
+            printShow(bdfi.listShowsPerson(idPerson));
         }
         catch (IdPersonDoesNotExistException e) {
             System.out.print(PERSON_MISSING);
@@ -463,9 +479,7 @@ public class Main {
         in.nextLine();
 
         try {
-            Show show = bdfi.listBestShows();
-
-            printShow(show);
+            printShow(bdfi.listBestShows());
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
@@ -546,7 +560,7 @@ public class Main {
 
         System.out.print(QUIT_MESSAGE);
 
-        saveBDFI(bdfi);
+        saveData(bdfi);
     }
 
 }

@@ -11,15 +11,23 @@ import dataStructures.List;
  */
 public class ShowClass implements ShowBDFI {
     // Instance variables
-    protected String id;
-    protected String title;
-    protected int prodYear;
-    protected boolean premiered;
-    protected List<String> tags;
-    protected List<Participant> participants;
-    protected int ratingCount;
-    protected int rating;
+    private final String id;
+    private final String title;
+    private final int prodYear;
+    private boolean premiered;
+    private final List<String> tags;
+    private final List<Participant> participants;
+    private int ratingCount;
+    private int rating;
 
+    /**
+     * Show data structure implementation
+     *
+     * @param id        - the show's unique identifier
+     * @param title     - the show's title
+     * @param prodYear  - the show's year of production
+     * @param premiered - the show's production state
+     */
     public ShowClass(String id, String title, int prodYear, boolean premiered) {
         this.id = id;
         this.title = title;
@@ -62,8 +70,7 @@ public class ShowClass implements ShowBDFI {
     }
 
     @Override
-    public Iterator<Participant> listParticipants()
-            throws ShowHasNoParticipantsException {
+    public Iterator<Participant> listParticipants() throws ShowHasNoParticipantsException {
         if (participants.isEmpty())
             throw new ShowHasNoParticipantsException();
 
@@ -95,6 +102,7 @@ public class ShowClass implements ShowBDFI {
         participants.addLast(participant);
     }
 
+    @Override
     public void addRating(int stars) {
         rating = bdfiAlg.updateReview(stars, ratingCount, rating);
         ratingCount++;
@@ -102,8 +110,10 @@ public class ShowClass implements ShowBDFI {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ShowClass showClass = (ShowClass) o;
         return id.equalsIgnoreCase(showClass.id);
     }

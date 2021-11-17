@@ -12,15 +12,15 @@ import java.io.Serializable;
 public interface BDFI extends Serializable {
 
     /**
-     * Inserts a new professional in the system
+     * Inserts a new person in the system
      *
-     * @param idPerson - the professional's unique identifier
+     * @param idPerson - the person's unique identifier
      * @param name     - an artistic or professional name
-     * @param bYear    - the professional's year of birth
-     * @param gender   - the professional's gender
-     * @param email    - the professional's email
-     * @param phone    - the professional's phone
-     * @throws InvalidYearException if the provided year exceeds the current year
+     * @param bYear    - the person's year of birth
+     * @param gender   - the person's gender
+     * @param email    - the person's email
+     * @param phone    - the person's phone
+     * @throws InvalidYearException if the provided year is negative
      */
     void addPerson(String idPerson, String name, int bYear, String gender, String email,
                    String phone)
@@ -32,7 +32,7 @@ public interface BDFI extends Serializable {
      * @param idShow - the show's unique identifier
      * @param pYear  - the show's production year
      * @param title  - the show's title
-     * @throws InvalidYearException if the provided year exceeds the current year
+     * @throws InvalidYearException if the provided year is negative
      */
     void addShow(String idShow, int pYear, String title)
             throws InvalidYearException, IdShowExistsException;
@@ -80,8 +80,7 @@ public interface BDFI extends Serializable {
     /**
      * @param idShow - the show's unique identifier
      * @param stars  - the show's evaluation
-     * @throws InvalidRatingException      if the evaluation's not between 0 and 10
-     *                                     stars
+     * @throws InvalidRatingException      if the evaluation's not between 0 and 10 stars
      * @throws IdShowDoesNotExistException if idShow doesn't exist
      * @throws HasPremieredException       if the show has not premiered yet
      */
@@ -89,21 +88,15 @@ public interface BDFI extends Serializable {
             throws InvalidRatingException, IdShowDoesNotExistException, HasPremieredException;
 
     /**
-     * TODO: Considerar trocar isto por metodos mais especificos
-     *
      * @param idShow - the show's unique identifier
-     * @return the show associated to the idShow to print all the information
-     * required
+     * @return the show associated to the idShow to print all the information required
      * @throws IdShowDoesNotExistException if idShow doesn't exist
      */
     ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException;
 
     /**
-     * TODO: Considerar trocar isto por metodos mais especificos
-     *
      * @param idPerson - the professional's unique identifier
-     * @return the person associated to the idPerson to print all the information
-     * required
+     * @return the person associated to the idPerson to print all the information required
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      */
     PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException;
@@ -112,7 +105,7 @@ public interface BDFI extends Serializable {
      * Lists all the shows where the person in the system are involved
      *
      * @param idPerson - the professional's unique identifier
-     * @return the show where the person are involved --> only a show in stage 1
+     * @return the shows where the person is involved
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws PersonHasNoShowsException     if person isn't involved in any show
      */
@@ -134,27 +127,22 @@ public interface BDFI extends Serializable {
     /**
      * Lists all the shows with the best average evaluation in the moment
      *
-     * @return the shows in the system -> a single show in stage 1
-     * @throws NoShowsInSystemException  if the system haven't any show in the
-     *                                   system
-     * @throws NoShowsPremieredException if the system haven't any show premiered in
-     *                                   the system
+     * @return the best shows in the system
+     * @throws NoShowsInSystemException  if the system haven't any show in the system
+     * @throws NoShowsPremieredException if the system haven't any show premiered in the system
      * @throws NoRatedShowsException     if the system haven't any show rated
      */
     Show listBestShows()
             throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException;
 
     /**
-     * TODO: DISCUTIR IMPLEMENTACAO DA FUNCAO
+     * Lists every show in the system with a given rating
      *
-     * @param rating the rating condition to list the show
+     * @param rating - the rating condition to list the show
      * @return the rated shows with the requested rating
-     * @throws InvalidRatingException    if the evaluation's not between 0 and 10
-     *                                   stars
-     * @throws NoShowsInSystemException  if the system haven't any show in the
-     *                                   system
-     * @throws NoShowsPremieredException if the system haven't any show premiered in
-     *                                   the system
+     * @throws InvalidRatingException    if the evaluation's not between 0 and 10 stars
+     * @throws NoShowsInSystemException  if the system haven't any show in the system
+     * @throws NoShowsPremieredException if the system haven't any show premiered in the system
      * @throws NoRatedShowsException     if the system haven't any show rated
      */
     Show listShows(int rating)
@@ -162,7 +150,7 @@ public interface BDFI extends Serializable {
             NoRatedShowsException;
 
     /**
-     * TODO: DISCUTIR IMPLEMENTACAO DA FUNCAO
+     * Lists every show in the system with a given tag
      *
      * @param tag - is the keyword to search for with it
      * @return the shows with the specific tag

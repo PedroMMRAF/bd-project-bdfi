@@ -136,6 +136,7 @@ public class BDFIClass implements BDFI {
         return getShow(idShow).listParticipants();
     }
 
+    // TODO: Implementacao 2 fase
     @Override
     public Show listBestShows()
             throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
@@ -153,6 +154,7 @@ public class BDFIClass implements BDFI {
         return show;
     }
 
+    // TODO: Implementacao 2 fase
     @Override
     public Show listShows(int rating)
             throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
@@ -174,6 +176,7 @@ public class BDFIClass implements BDFI {
         return show.getRating() == rating ? show : null;
     }
 
+    // TODO: Implementacao 2 fase
     @Override
     public Show listTaggedShows(String tag)
             throws NoShowsInSystemException, NoTaggedShowsException {
@@ -219,6 +222,4 @@ public class BDFIClass implements BDFI {
 
         return shows.get(pos);
     }
-
-
 }

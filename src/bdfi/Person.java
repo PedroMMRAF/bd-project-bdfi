@@ -41,7 +41,7 @@ public interface Person extends Serializable {
     String getPhone();
 
     /**
-     * TODO: DISCUTIR IMPLEMENTACAO
+     * TODO: Implementacao para fase 2
      *
      * @return an iterator with all the person's shows
      * @throws PersonHasNoShowsException if person isn't involved in any show

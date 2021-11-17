@@ -2,11 +2,21 @@ package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
 
+/**
+ * @author Guilherme Santana 60182
+ * @author Pedro Fernandes 60694
+ */
 public class ParticipantClass implements Participant {
 
     private final Person person;
     private final String description;
 
+    /**
+     * Participant data structure implementation
+     *
+     * @param person      - the participant's person object
+     * @param description - the participant's description
+     */
     public ParticipantClass(Person person, String description) {
         this.person = person;
         this.description = description;
