@@ -84,8 +84,11 @@ public class Main {
             op.close();
             fp.close();
         }
+        catch (FileNotFoundException e) {
+            // e.printStackTrace();
+        }
         catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         return bdfi;
@@ -106,8 +109,11 @@ public class Main {
             op.close();
             fp.close();
         }
+        catch (FileNotFoundException e) {
+            // e.printStackTrace();
+        }
         catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
@@ -260,7 +266,7 @@ public class Main {
         String email = in.next();
         String phone = in.next();
         String gender = getGender(in);
-        String name = in.nextLine().strip();
+        String name = in.nextLine().trim();
 
         try {
             bdfi.addPerson(id, name, bYear, gender, email, phone);
@@ -286,7 +292,7 @@ public class Main {
     private static void addShow(Scanner in, BDFI bdfi) {
         String id = in.next();
         int pYear = in.nextInt();
-        String title = in.nextLine().strip();
+        String title = in.nextLine().trim();
 
         try {
             bdfi.addShow(id, pYear, title);
@@ -309,7 +315,7 @@ public class Main {
     private static void addParticipation(Scanner in, BDFI bdfi) {
         String idPerson = in.next();
         String idShow = in.next();
-        String description = in.nextLine().strip();
+        String description = in.nextLine().trim();
 
         try {
             bdfi.addParticipation(idPerson, idShow, description);
@@ -564,7 +570,7 @@ public class Main {
      * @param bdfi - database object
      */
     private static void listTaggedShows(Scanner in, BDFI bdfi) {
-        String tag = in.nextLine().strip();
+        String tag = in.nextLine().trim();
 
         try {
             Show show = bdfi.listTaggedShows(tag);
