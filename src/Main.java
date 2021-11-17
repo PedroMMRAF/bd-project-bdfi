@@ -135,10 +135,15 @@ public class Main {
     private static String getGender(Scanner in) {
         String gender = in.next();
 
-        return switch (gender.toLowerCase()) {
-            case MALE, FEMALE, OTHER, NOT_PROVIDED -> gender;
-            default -> null;
-        };
+        switch (gender.toLowerCase()) {
+            case MALE:
+            case FEMALE:
+            case OTHER:
+            case NOT_PROVIDED:
+                return gender;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -153,29 +158,57 @@ public class Main {
         boolean ret = true;
 
         switch (getCommand(in)) {
-            case ADDPERSON -> addPerson(in, bdfi);
-            case ADDSHOW -> addShow(in, bdfi);
-            case ADDPARTICIPATION -> addParticipation(in, bdfi);
-            case PREMIERE -> premiere(in, bdfi);
-            case REMOVESHOW -> removeShow(in, bdfi);
-            case TAGSHOW -> tagShow(in, bdfi);
-            case INFOSHOW -> infoShow(in, bdfi);
-            case RATESHOW -> rateShow(in, bdfi);
-            case INFOPERSON -> infoPerson(in, bdfi);
-            case LISTBESTSHOWS -> listBestShows(in, bdfi);
-            case LISTPARTICIPATIONS -> listParticipations(in, bdfi);
-            case LISTSHOWS -> listShows(in, bdfi);
-            case LISTSHOWSPERSON -> listShowsPerson(in, bdfi);
-            case LISTTAGGEDSHOWS -> listTaggedShows(in, bdfi);
-            case QUIT -> {
+            case ADDPERSON:
+                addPerson(in, bdfi);
+                break;
+            case ADDSHOW:
+                addShow(in, bdfi);
+                break;
+            case ADDPARTICIPATION:
+                addParticipation(in, bdfi);
+                break;
+            case PREMIERE:
+                premiere(in, bdfi);
+                break;
+            case REMOVESHOW:
+                removeShow(in, bdfi);
+                break;
+            case TAGSHOW:
+                tagShow(in, bdfi);
+                break;
+            case INFOSHOW:
+                infoShow(in, bdfi);
+                break;
+            case RATESHOW:
+                rateShow(in, bdfi);
+                break;
+            case INFOPERSON:
+                infoPerson(in, bdfi);
+                break;
+            case LISTBESTSHOWS:
+                listBestShows(in, bdfi);
+                break;
+            case LISTPARTICIPATIONS:
+                listParticipations(in, bdfi);
+                break;
+            case LISTSHOWS:
+                listShows(in, bdfi);
+                break;
+            case LISTSHOWSPERSON:
+                listShowsPerson(in, bdfi);
+                break;
+            case LISTTAGGEDSHOWS:
+                listTaggedShows(in, bdfi);
+                break;
+            // Returning false ends command execution
+            case QUIT:
                 quit(in, bdfi);
-                // Returning false ends command execution
                 ret = false;
-            }
-            case UNKNOWN -> {
+                break;
+            case UNKNOWN:
                 System.out.print(UNKNOWN_COMMAND);
                 in.nextLine();
-            }
+                break;
         }
 
         System.out.println();
