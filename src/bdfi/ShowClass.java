@@ -16,7 +16,7 @@ public class ShowClass implements ShowBDFI {
     protected int prodYear;
     protected boolean premiered;
     protected List<String> tags;
-    protected List<Participant> participants;
+    protected List<Person> participants;
     protected int ratingCount;
     protected int rating;
 
@@ -62,7 +62,7 @@ public class ShowClass implements ShowBDFI {
     }
 
     @Override
-    public Iterator<Participant> listParticipants()
+    public Iterator<Person> listParticipants()
             throws ShowHasNoParticipantsException {
         if (participants.isEmpty())
             throw new ShowHasNoParticipantsException();
@@ -91,8 +91,8 @@ public class ShowClass implements ShowBDFI {
     }
 
     @Override
-    public void addParticipant(Participant participant) {
-        participants.addLast(participant);
+    public void addParticipant(PersonBDFI person) {
+        participants.addLast(person);
     }
 
     public void addRating(int stars) {
@@ -105,6 +105,6 @@ public class ShowClass implements ShowBDFI {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShowClass showClass = (ShowClass) o;
-        return id.equalsIgnoreCase(showClass.id);
+        return id.equals(showClass.id);
     }
 }

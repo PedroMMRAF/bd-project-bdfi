@@ -74,6 +74,6 @@ public class PersonClass implements PersonBDFI {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonClass that = (PersonClass) o;
-        return id.equalsIgnoreCase(that.id);
+        return id.equals(that.id);
     }
 }

@@ -3,13 +3,11 @@ package bdfi;
 import bdfi.exceptions.*;
 import dataStructures.Iterator;
 
-import java.io.Serializable;
-
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public interface BDFI extends Serializable {
+public interface BDFI {
 
     /**
      * Inserts a new professional in the system
@@ -116,7 +114,7 @@ public interface BDFI extends Serializable {
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws PersonHasNoShowsException     if person isn't involved in any show
      */
-    Show listShowsPerson(String idPerson)
+    Show listPersonShows(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException;
 
     /**
@@ -128,7 +126,7 @@ public interface BDFI extends Serializable {
      * @throws ShowHasNoParticipantsException if the show doesn't have any person
      *                                        participating in it
      */
-    Iterator<Participant> listParticipations(String idShow)
+    Iterator<Person> listPersonInShow(String idShow)
             throws IdShowDoesNotExistException, ShowHasNoParticipantsException;
 
     /**
