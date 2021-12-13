@@ -10,7 +10,11 @@ import dataStructures.List;
  * @author Pedro Fernandes 60694
  */
 public class ShowClass implements ShowBDFI {
-    // Instance variables
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Instance variables
     private final String id;
     private final String title;
     private final int prodYear;

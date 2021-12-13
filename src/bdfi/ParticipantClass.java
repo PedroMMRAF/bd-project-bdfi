@@ -1,6 +1,7 @@
 package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
+import dataStructures.Iterator;
 
 /**
  * @author Guilherme Santana 60182
@@ -8,7 +9,11 @@ import bdfi.exceptions.PersonHasNoShowsException;
  */
 public class ParticipantClass implements Participant {
 
-    private final Person person;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Person person;
     private final String description;
 
     /**
@@ -53,7 +58,7 @@ public class ParticipantClass implements Participant {
     }
 
     @Override
-    public Show listShows() throws PersonHasNoShowsException {
+    public Iterator<Show> listShows() throws PersonHasNoShowsException {
         return person.listShows();
     }
 

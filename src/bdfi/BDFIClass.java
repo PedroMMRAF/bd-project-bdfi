@@ -1,23 +1,28 @@
 package bdfi;
 
 import bdfi.exceptions.*;
-import dataStructures.DoubleList;
-import dataStructures.Iterator;
-import dataStructures.List;
-
+import dataStructures.*;
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
 public class BDFIClass implements BDFI {
-    // Rating score limits
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Rating score limits
     private static final int RATING_MIN = 0;
     private static final int RATING_MAX = 10;
 
     // Instance variables
     protected int currentYear;
-    protected List<PersonBDFI> people;
-    protected List<ShowBDFI> shows;
+    protected boolean premieredShows;
+    protected Dictionary<String, PersonBDFI> people;
+    protected OrderedDictionary<String, ShowBDFI> listShows;
+    protected Dictionary<String, ShowBDFI> shows;
+    protected OrderedDictionary<Integer, OrderedDictionary<String, Show>> ratedShows;
+    protected Dictionary<String, OrderedDictionary<String, Show>> tagShows;
 
     /**
      * Database constructor
@@ -26,8 +31,12 @@ public class BDFIClass implements BDFI {
      */
     public BDFIClass(int currentYear) {
         this.currentYear = currentYear;
-        this.people = new DoubleList<>();
-        this.shows = new DoubleList<>();
+        this.premieredShows = false;
+        this.people = new SepChainHashTable<>();
+        this.listShows = new OrderedDoubleList<>();
+        shows = new SepChainHashTable<>();
+        ratedShows = new BinarySearchTree<>();
+        
     }
 
     @Override
@@ -39,13 +48,13 @@ public class BDFIClass implements BDFI {
 
         if (gender == null)
             throw new InvalidGenderException();
+        
+        if (people.find(idPerson) != null)
+            throw new IdPersonExistsException();
 
         PersonBDFI person = new PersonClass(idPerson, name, bYear, gender, email, phone);
 
-        if (people.find(person) > -1)
-            throw new IdPersonExistsException();
-
-        people.addLast(person);
+        people.insert(idPerson, person);
     }
 
     @Override
@@ -54,12 +63,16 @@ public class BDFIClass implements BDFI {
         if (pYear < 0 || pYear > currentYear)
             throw new InvalidYearException();
 
+        if (shows.find(idShow) != null)
+            throw new IdShowExistsException();
+        
         ShowBDFI show = new ShowClass(idShow, title, pYear, pYear != currentYear);
 
-        if (shows.find(show) > -1)
-            throw new IdShowExistsException();
-
-        shows.addLast(show);
+        listShows.insert(title, show); //TODO  verificar ordem por titulo e pela capitalizacao dos caracteres 
+        shows.insert(idShow, show);
+        
+        premieredShows = premieredShows || show.hasPremiered();
+        
     }
 
     @Override
@@ -82,6 +95,7 @@ public class BDFIClass implements BDFI {
             throw new HasPremieredException();
 
         show.premiere();
+        premieredShows = true;
     }
 
     @Override
@@ -92,12 +106,29 @@ public class BDFIClass implements BDFI {
         if (show.hasPremiered())
             throw new HasPremieredException();
 
-        shows.remove(show);
+        shows.remove(idShow);
+        listShows.remove(idShow);
+        
+        Iterator<String> it = show.listTags();
+        
+        while(it.hasNext()) {
+        	String tag = it.next();
+        	tagShows.find(tag.toLowerCase()).remove(show.getTitle());
+        }
     }
 
     @Override
     public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
-        getShow(idShow).addTag(tag);
+        OrderedDictionary<String, Show> dict = tagShows.find(tag.toLowerCase());
+        if(dict == null) {
+        	dict = new OrderedDoubleList<>();
+        	tagShows.insert(tag.toLowerCase(), dict); 
+        }
+        ShowBDFI show = getShow(idShow);
+        show.addTag(tag);
+        dict.insert(show.getTitle(), show);  //TODO capatilizacao
+        
+        
     }
 
     @Override
@@ -110,8 +141,22 @@ public class BDFIClass implements BDFI {
 
         if (!show.hasPremiered())
             throw new HasPremieredException();
-
+        
+        if(show.hasRatings()) 
+        	ratedShows.find(show.getRating()).remove(show.getTitle()); // TODO ordem do titulo capitalizacao
+        
+        
         show.addRating(stars);
+        
+        OrderedDictionary<String, Show> dict = ratedShows.find(show.getRating()); 
+        
+        if(dict == null) {
+        	dict = new OrderedDoubleList<>();
+        	ratedShows.insert(show.getRating(), dict);
+        }
+        
+        dict.insert(show.getTitle(), show); // TODO ordem do titulo capitalizacao
+        	
     }
 
     @Override
@@ -125,7 +170,7 @@ public class BDFIClass implements BDFI {
     }
 
     @Override
-    public Show listShowsPerson(String idPerson)
+    public Iterator<Show> listShowsPerson(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException {
         return getPerson(idPerson).listShows();
     }
@@ -136,59 +181,66 @@ public class BDFIClass implements BDFI {
         return getShow(idShow).listParticipants();
     }
 
-    // TODO: Implementacao 2 fase
     @Override
-    public Show listBestShows()
+    public Iterator<Show> listBestShows()
             throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        ShowBDFI show = shows.getFirst();
-
-        if (!show.hasPremiered())
+        if (!premieredShows)
             throw new NoShowsPremieredException();
 
-        if (!show.hasRatings())
+        Iterator<OrderedDictionary<String, Show>> it = ratedShows.valuesIterator();
+
+        if (!it.hasNext())
             throw new NoRatedShowsException();
 
-        return show;
+        Iterator<Show> showsIt = it.next().valuesIterator();
+        
+        while(!showsIt.hasNext())
+        	showsIt = it.next().valuesIterator();
+        
+        return showsIt;
     }
 
     // TODO: Implementacao 2 fase
     @Override
-    public Show listShows(int rating)
+    public Iterator<Show> listShows(int rating)
             throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
             NoRatedShowsException {
         if (rating < RATING_MIN || rating > RATING_MAX)
             throw new InvalidRatingException();
 
-        if (shows.isEmpty())
+        if (listShows.isEmpty())
             throw new NoShowsInSystemException();
 
-        ShowBDFI show = shows.getLast();
 
-        if (!show.hasPremiered())
+        if (!premieredShows)
             throw new NoShowsPremieredException();
-
-        if (!show.hasRatings())
+        
+        OrderedDictionary<String, Show> dict = ratedShows.find(rating);
+        
+        if (dict == null || dict.isEmpty())
             throw new NoRatedShowsException();
-
-        return show.getRating() == rating ? show : null;
+        
+        return dict.valuesIterator();
     }
 
-    // TODO: Implementacao 2 fase
     @Override
-    public Show listTaggedShows(String tag)
-            throws NoShowsInSystemException, NoTaggedShowsException {
-        if (shows.isEmpty())
+    public Iterator<Show> listTaggedShows(String tag)
+            throws NoShowsInSystemException, NoTaggedShowsException, NoShowsWithTagException {
+        if (listShows.isEmpty())
             throw new NoShowsInSystemException();
 
-        ShowBDFI show = shows.getLast();
+        if(tagShows.isEmpty()) 
+        	throw new NoTaggedShowsException();
+        	
+       OrderedDictionary<String, Show> dict = tagShows.find(tag.toLowerCase());
+       
+       if(dict == null || dict.isEmpty())
+    	   throw new NoShowsWithTagException();
 
-        if (!show.hasTag(tag))
-            throw new NoTaggedShowsException();
-
-        return show;
+        return dict.valuesIterator();
     }
 
     /**
@@ -199,12 +251,12 @@ public class BDFIClass implements BDFI {
      * @throws IdPersonDoesNotExistException if the professional does not exist
      */
     private PersonBDFI getPerson(String idPerson) throws IdPersonDoesNotExistException {
-        int pos = people.find(new PersonClass(idPerson, null, 0, null, null, null));
+        PersonBDFI person = people.find(idPerson);
 
-        if (pos == -1)
+        if (person == null)
             throw new IdPersonDoesNotExistException();
 
-        return people.get(pos);
+        return person;
     }
 
     /**
@@ -215,11 +267,11 @@ public class BDFIClass implements BDFI {
      * @throws IdShowDoesNotExistException if the show does not exist
      */
     private ShowBDFI getShow(String idShow) throws IdShowDoesNotExistException {
-        int pos = shows.find(new ShowClass(idShow, null, 0, false));
+        ShowBDFI show = shows.find(idShow);
 
-        if (pos == -1)
+        if (show == null)
             throw new IdShowDoesNotExistException();
 
-        return shows.get(pos);
+        return show;
     }
 }

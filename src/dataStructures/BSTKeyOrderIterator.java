@@ -1,7 +1,11 @@
 package dataStructures;
 
 public class BSTKeyOrderIterator<K, V> implements Iterator<Entry<K, V>> {
-    private final BSTNode<K, V> root;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final BSTNode<K, V> root;
     private BSTNode<K, V> current;
     private Stack<BSTNode<K, V>> entries;
 

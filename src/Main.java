@@ -573,19 +573,22 @@ public class Main {
         String tag = in.nextLine().trim();
 
         try {
-            Show show = bdfi.listTaggedShows(tag);
+        	Iterator<Show> it = bdfi.listTaggedShows(tag);
+        	while(it.hasNext()) {
+        		
+        	}
 
-            if (show == null)
-                System.out.print(NO_SHOWS_WITH_TAG);
-            else
-                printShow(show);
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
         }
         catch (NoTaggedShowsException e) {
             System.out.print(NO_SHOWS_TAGGED);
-        }
+        } 
+        catch (NoShowsWithTagException e) {	
+        	System.out.println(NO_SHOWS_WITH_TAG);
+		}
+        
     }
 
     /**

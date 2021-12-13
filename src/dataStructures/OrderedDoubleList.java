@@ -1,7 +1,11 @@
 package dataStructures;
 
 public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDictionary<K, V> {
-    protected DoubleList.DoubleListNode<Entry<K, V>> head;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected DoubleList.DoubleListNode<Entry<K, V>> head;
     protected DoubleList.DoubleListNode<Entry<K, V>> tail;
     protected int currentSize;
 
@@ -192,6 +196,11 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
     public Iterator<Entry<K, V>> iterator() {
         return new DoubleListIterator<>(head, tail);
     }
+    
+    @Override
+    public Iterator<V> valuesIterator() {
+    	return new DictionaryValuesIterator<>(iterator());
+    }
 
     @Override
     public Entry<K, V> minEntry() throws EmptyDictionaryException {
@@ -208,4 +217,6 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
 
         return tail.getElement();
     }
+    
+    
 }

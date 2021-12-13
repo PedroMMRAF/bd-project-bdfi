@@ -1,6 +1,7 @@
 package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
+import dataStructures.Iterator;
 
 import java.io.Serializable;
 
@@ -41,11 +42,10 @@ public interface Person extends Serializable {
     String getPhone();
 
     /**
-     * TODO: Implementacao para fase 2
      *
      * @return an iterator with all the person's shows
      * @throws PersonHasNoShowsException if person isn't involved in any show
      */
-    Show listShows() throws PersonHasNoShowsException;
+    Iterator<Show> listShows() throws PersonHasNoShowsException;
 
 }
