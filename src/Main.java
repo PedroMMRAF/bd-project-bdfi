@@ -45,7 +45,7 @@ public class Main {
     private static final String SHOW_EXISTS = "idShow exists.\n";
     private static final String SHOW_MISSING = "idShow does not exist.\n";
     private static final String SHOW_ALREADY_PREMIERED = "idShow has already completed " +
-            "production" + ".\n";
+            "production.\n";
     private static final String SHOW_NOT_PREMIERED = "idShow is in production.\n";
     private static final String SHOW_NO_PEOPLE = "idShow has no participations.\n";
     private static final String NO_SHOWS = "No shows.\n";
