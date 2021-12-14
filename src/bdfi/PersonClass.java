@@ -10,18 +10,23 @@ import dataStructures.OrderedDoubleList;
  * @author Pedro Fernandes 60694
  */
 public class PersonClass implements PersonBDFI {
-    /**
-	 * 
-	 */
+    // Serial version ID
 	private static final long serialVersionUID = 1L;
-	// Instance variables
+
+	// Instance variables describing a person's details
     protected String id;
     protected String name;
     protected int birthYear;
     protected String gender;
     protected String email;
     protected String phone;
-    protected OrderedDictionary<String, ShowBDFI> shows;
+
+    /**
+     * Ordered mapping of showId -> Show
+     * Used to create an iterator of Shows ordered by showId
+     * Implemented using an ordered double list (favors iteration over insertion)
+     */
+    protected OrderedDictionary<String, Show> shows;
 
     /**
      * Person data structure implementation
@@ -76,7 +81,7 @@ public class PersonClass implements PersonBDFI {
 
     @Override
     public Iterator<Show> listShows() throws PersonHasNoShowsException {
-        if (shows == null)
+        if (shows.isEmpty())
             throw new PersonHasNoShowsException();
 
         return shows.valuesIterator();
@@ -84,7 +89,7 @@ public class PersonClass implements PersonBDFI {
 
     @Override
     public void addShow(ShowBDFI show) {
-        shows.insert(show.getId(), show);
+        shows.insert(show.getId().toLowerCase(), show);
     }
 
     @Override

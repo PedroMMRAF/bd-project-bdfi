@@ -41,12 +41,12 @@ public interface BDFI extends Serializable {
      * Include the participation of some professional onto a show
      *
      * @param idPerson    - the professional's unique identifier
-     * @param IdShow      - the show's unique identifier
+     * @param idShow      - the show's unique identifier
      * @param description - the participation's description
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws IdShowDoesNotExistException   if idShow doesn't exist
      */
-    void addParticipation(String idPerson, String IdShow, String description)
+    void addParticipation(String idPerson, String idShow, String description)
             throws IdPersonDoesNotExistException, IdShowDoesNotExistException;
 
     /**
@@ -152,12 +152,13 @@ public interface BDFI extends Serializable {
     /**
      * Lists every show in the system with a given tag
      *
-     * @param tag - is the keyword to search for with it 
+     * @param tag - is the keyword to search for with it
      * @return the shows with the specific tag
      * @throws NoShowsInSystemException if the system haven't any show in the system
-     * @throws NoTaggedShowsException  	if haven't any tagged shows in the system
+     * @throws NoTaggedShowsException   if haven't any tagged shows in the system
      * @throws NoShowsWithTagException  if haven't any show with the tag
      */
-    Iterator<Show> listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException, NoShowsWithTagException;
+    Iterator<Show> listTaggedShows(String tag)
+            throws NoShowsInSystemException, NoTaggedShowsException, NoShowsWithTagException;
 
 }

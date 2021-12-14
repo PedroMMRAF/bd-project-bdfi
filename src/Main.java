@@ -73,7 +73,7 @@ public class Main {
      * @return the loaded database instance if it existed, a new one otherwise
      */
     private static BDFI loadData() {
-        BDFI bdfi = new BDFIClass(CURRENT_YEAR);
+        BDFI bdfi = null;
 
         try {
             FileInputStream fp = new FileInputStream(DATA_FILE);
@@ -85,11 +85,14 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            // e.printStackTrace();
+            // ignore
         }
         catch (IOException | ClassNotFoundException e) {
-            // e.printStackTrace();
+            // ignore
         }
+
+        if (bdfi == null)
+            bdfi = new BDFIClass(CURRENT_YEAR);
 
         return bdfi;
     }
@@ -110,10 +113,10 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            // e.printStackTrace();
+            // ignore
         }
         catch (IOException e) {
-            // e.printStackTrace();
+            // ignore
         }
     }
 
@@ -206,9 +209,9 @@ public class Main {
             case LISTTAGGEDSHOWS:
                 listTaggedShows(in, bdfi);
                 break;
-            // Returning false ends command execution
             case QUIT:
                 quit(in, bdfi);
+                // Returning false ends command execution
                 ret = false;
                 break;
             case UNKNOWN:
@@ -249,9 +252,11 @@ public class Main {
      * @param participant - the participant to print the information of
      */
     private static void printParticipant(Participant participant) {
-        System.out.printf(PARTICIPANT_FORMAT, participant.getId(), participant.getName(),
-                participant.getBirthYear(), participant.getEmail(), participant.getPhone(),
-                participant.getGender(), participant.getDescription());
+        Person person = participant.getPerson();
+
+        System.out.printf(PARTICIPANT_FORMAT, person.getId(), person.getName(),
+                person.getBirthYear(), person.getEmail(), person.getPhone(),
+                person.getGender(), participant.getDescription());
     }
 
     /**
@@ -474,7 +479,10 @@ public class Main {
         in.nextLine();
 
         try {
-            printShow(bdfi.listShowsPerson(idPerson));
+            Iterator<Show> it = bdfi.listShowsPerson(idPerson);
+
+            while (it.hasNext())
+                printShow(it.next());
         }
         catch (IdPersonDoesNotExistException e) {
             System.out.print(PERSON_MISSING);
@@ -495,10 +503,10 @@ public class Main {
         in.nextLine();
 
         try {
-            Iterator<Participant> participants = bdfi.listParticipations(idShow);
+            Iterator<Participant> it = bdfi.listParticipations(idShow);
 
-            while (participants.hasNext())
-                printParticipant(participants.next());
+            while (it.hasNext())
+                printParticipant(it.next());
         }
         catch (IdShowDoesNotExistException e) {
             System.out.print(SHOW_MISSING);
@@ -518,7 +526,10 @@ public class Main {
         in.nextLine();
 
         try {
-            printShow(bdfi.listBestShows());
+            Iterator<Show> it = bdfi.listBestShows();
+
+            while (it.hasNext())
+                printShow(it.next());
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
@@ -542,12 +553,10 @@ public class Main {
         in.nextLine();
 
         try {
-            Show show = bdfi.listShows(rating);
+            Iterator<Show> it = bdfi.listShows(rating);
 
-            if (show == null)
-                System.out.print(NO_SHOWS_WITH_RATING);
-            else
-                printShow(show);
+            while (it.hasNext())
+                printShow(it.next());
         }
         catch (InvalidRatingException e) {
             System.out.print(INVALID_RATING);
@@ -573,22 +582,21 @@ public class Main {
         String tag = in.nextLine().trim();
 
         try {
-        	Iterator<Show> it = bdfi.listTaggedShows(tag);
-        	while(it.hasNext()) {
-        		
-        	}
+            Iterator<Show> it = bdfi.listTaggedShows(tag);
 
+            while (it.hasNext())
+                printShow(it.next());
         }
         catch (NoShowsInSystemException e) {
             System.out.print(NO_SHOWS);
         }
         catch (NoTaggedShowsException e) {
             System.out.print(NO_SHOWS_TAGGED);
-        } 
-        catch (NoShowsWithTagException e) {	
-        	System.out.println(NO_SHOWS_WITH_TAG);
-		}
-        
+        }
+        catch (NoShowsWithTagException e) {
+            System.out.println(NO_SHOWS_WITH_TAG);
+        }
+
     }
 
     /**
