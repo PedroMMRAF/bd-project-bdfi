@@ -41,12 +41,12 @@ public interface BDFI extends Serializable {
      * Include the participation of some professional onto a show
      *
      * @param idPerson    - the professional's unique identifier
-     * @param IdShow      - the show's unique identifier
+     * @param idShow      - the show's unique identifier
      * @param description - the participation's description
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws IdShowDoesNotExistException   if idShow doesn't exist
      */
-    void addParticipation(String idPerson, String IdShow, String description)
+    void addParticipation(String idPerson, String idShow, String description)
             throws IdPersonDoesNotExistException, IdShowDoesNotExistException;
 
     /**
@@ -109,7 +109,7 @@ public interface BDFI extends Serializable {
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      * @throws PersonHasNoShowsException     if person isn't involved in any show
      */
-    Show listShowsPerson(String idPerson)
+    Iterator<Show> listShowsPerson(String idPerson)
             throws IdPersonDoesNotExistException, PersonHasNoShowsException;
 
     /**
@@ -132,7 +132,7 @@ public interface BDFI extends Serializable {
      * @throws NoShowsPremieredException if the system haven't any show premiered in the system
      * @throws NoRatedShowsException     if the system haven't any show rated
      */
-    Show listBestShows()
+    Iterator<Show> listBestShows()
             throws NoShowsInSystemException, NoShowsPremieredException, NoRatedShowsException;
 
     /**
@@ -145,7 +145,7 @@ public interface BDFI extends Serializable {
      * @throws NoShowsPremieredException if the system haven't any show premiered in the system
      * @throws NoRatedShowsException     if the system haven't any show rated
      */
-    Show listShows(int rating)
+    Iterator<Show> listShows(int rating)
             throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
             NoRatedShowsException;
 
@@ -155,8 +155,10 @@ public interface BDFI extends Serializable {
      * @param tag - is the keyword to search for with it
      * @return the shows with the specific tag
      * @throws NoShowsInSystemException if the system haven't any show in the system
-     * @throws NoTaggedShowsException   if haven't any show with the tag
+     * @throws NoTaggedShowsException   if haven't any tagged shows in the system
+     * @throws NoShowsWithTagException  if haven't any show with the tag
      */
-    Show listTaggedShows(String tag) throws NoShowsInSystemException, NoTaggedShowsException;
+    Iterator<Show> listTaggedShows(String tag)
+            throws NoShowsInSystemException, NoTaggedShowsException, NoShowsWithTagException;
 
 }

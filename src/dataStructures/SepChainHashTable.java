@@ -109,6 +109,11 @@ public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, 
     public Iterator<Entry<K, V>> iterator() {
         return new SCHTIterator<>(table);
     }
+    
+    @Override
+    public Iterator<V> valuesIterator() {
+    	return new DictionaryValuesIterator<>(iterator());
+    }
 }
 
 

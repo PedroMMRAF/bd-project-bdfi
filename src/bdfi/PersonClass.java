@@ -1,20 +1,32 @@
 package bdfi;
 
 import bdfi.exceptions.PersonHasNoShowsException;
+import dataStructures.Iterator;
+import dataStructures.OrderedDictionary;
+import dataStructures.OrderedDoubleList;
 
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
 public class PersonClass implements PersonBDFI {
-    // Instance variables
+    // Serial version ID
+	private static final long serialVersionUID = 1L;
+
+	// Instance variables describing a person's details
     protected String id;
     protected String name;
     protected int birthYear;
     protected String gender;
     protected String email;
     protected String phone;
-    protected ShowBDFI show; // TODO: Implementacao 2 fase
+
+    /**
+     * Ordered mapping of showId -> Show
+     * Used to create an iterator of Shows ordered by showId
+     * Implemented using an ordered double list (favors iteration over insertion)
+     */
+    protected OrderedDictionary<String, Show> shows;
 
     /**
      * Person data structure implementation
@@ -34,7 +46,7 @@ public class PersonClass implements PersonBDFI {
         this.phone = phone;
         this.gender = gender;
         this.birthYear = birthYear;
-        this.show = null;
+        this.shows = new OrderedDoubleList<>();
     }
 
     @Override
@@ -67,19 +79,17 @@ public class PersonClass implements PersonBDFI {
         return phone;
     }
 
-    // TODO: Implementacao 2 fase
     @Override
-    public Show listShows() throws PersonHasNoShowsException {
-        if (show == null)
+    public Iterator<Show> listShows() throws PersonHasNoShowsException {
+        if (shows.isEmpty())
             throw new PersonHasNoShowsException();
 
-        return show;
+        return shows.valuesIterator();
     }
 
-    // TODO: Implementacao 2 fase
     @Override
     public void addShow(ShowBDFI show) {
-        this.show = show;
+        shows.insert(show.getId().toLowerCase(), show);
     }
 
     @Override

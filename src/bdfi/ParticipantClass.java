@@ -1,15 +1,18 @@
 package bdfi;
 
-import bdfi.exceptions.PersonHasNoShowsException;
-
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
 public class ParticipantClass implements Participant {
 
-    private final Person person;
-    private final String description;
+    private static final long serialVersionUID = 1L;
+
+    // Store original person object as is
+    protected Person person;
+
+    // Include a description of the person's role
+    protected String description;
 
     /**
      * Participant data structure implementation
@@ -23,41 +26,12 @@ public class ParticipantClass implements Participant {
     }
 
     @Override
-    public String getId() {
-        return person.getId();
-    }
-
-    @Override
-    public String getName() {
-        return person.getName();
-    }
-
-    @Override
-    public int getBirthYear() {
-        return person.getBirthYear();
-    }
-
-    @Override
-    public String getGender() {
-        return person.getGender();
-    }
-
-    @Override
-    public String getEmail() {
-        return person.getEmail();
-    }
-
-    @Override
-    public String getPhone() {
-        return person.getPhone();
-    }
-
-    @Override
-    public Show listShows() throws PersonHasNoShowsException {
-        return person.listShows();
+    public Person getPerson() {
+        return person;
     }
 
     public String getDescription() {
         return description;
     }
+
 }

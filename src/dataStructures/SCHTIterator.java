@@ -1,7 +1,11 @@
 package dataStructures;
 
 public class SCHTIterator<K, V> implements Iterator<Entry<K, V>> {
-    private final Dictionary<K, V>[] table;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final Dictionary<K, V>[] table;
     private Iterator<Entry<K, V>> current;
     private int next;
 

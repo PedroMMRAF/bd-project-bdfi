@@ -62,6 +62,12 @@ public interface Dictionary<K,V> extends Serializable
      */
     Iterator<Entry<K,V>> iterator( );  
 
+    /**
+     * Returns an iterator of the values in the dictionary.
+     * @return  iterator of the values in the dictionary
+     */
+    Iterator<V> valuesIterator();
+
 } 
 
 
