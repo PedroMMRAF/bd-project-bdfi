@@ -10,7 +10,6 @@ import java.io.Serializable;
  * @author AED Team
  * @version 1.0
  */
-
 public interface Queue<E> extends Serializable {
 
     /**

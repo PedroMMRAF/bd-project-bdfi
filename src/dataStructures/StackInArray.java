@@ -1,10 +1,10 @@
 package dataStructures;
 
 /**
- * Stack Array Implementation
+ * StackInArray Implementation
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 public class StackInArray<E> implements Stack<E> {
@@ -12,8 +12,7 @@ public class StackInArray<E> implements Stack<E> {
     /**
      * Serial Version UID of the Class
      */
-    static final long serialVersionUID = 0L;
-
+    public static final long serialVersionUID = 0L;
 
     /**
      * Default capacity of the stack.
@@ -42,7 +41,6 @@ public class StackInArray<E> implements Stack<E> {
         top = -1;
     }
 
-
     /**
      * Creates a Stack on an array with capacity DEFAULT_CAPACITY
      */
@@ -54,7 +52,6 @@ public class StackInArray<E> implements Stack<E> {
     public boolean isEmpty() {
         return top == -1;
     }
-
 
     /**
      * Returns true iff the stack cannot contain more elements.
@@ -70,7 +67,6 @@ public class StackInArray<E> implements Stack<E> {
         return top + 1;
     }
 
-
     /*
      * @see dataStructures.Stack#top()
      */
@@ -81,7 +77,6 @@ public class StackInArray<E> implements Stack<E> {
 
         return array[top];
     }
-
 
     /**
      * Inserts the specified <code>element</code> onto the top of the stack.
@@ -97,7 +92,6 @@ public class StackInArray<E> implements Stack<E> {
         array[top] = element;
     }
 
-
     @Override
     public E pop() throws EmptyStackException {
         if (this.isEmpty())
@@ -109,28 +103,4 @@ public class StackInArray<E> implements Stack<E> {
         return element;
     }
 
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,11 +3,11 @@ package dataStructures;
 import java.io.Serializable;
 
 /**
- * BST node implementation
+ * BSTNode implementation
  *
- * @param <K> Generic type Key
- * @param <V> Generic type Value
- * @author AED team
+ * @param <K> Generic Key
+ * @param <V> Generic Value
+ * @author AED Team
  * @version 1.0
  */
 class BSTNode<K, V> implements Serializable {
@@ -16,7 +16,6 @@ class BSTNode<K, V> implements Serializable {
      * Serial Version UID of the Class.
      */
     static final long serialVersionUID = 0L;
-
 
     /**
      * Entry stored in the node.
@@ -32,7 +31,6 @@ class BSTNode<K, V> implements Serializable {
      * (Pointer to) the right child.
      */
     private BSTNode<K, V> rightChild;
-
 
     /**
      * Constructor for BST nodes
@@ -146,6 +144,5 @@ class BSTNode<K, V> implements Serializable {
     public boolean isLeaf() {
         return leftChild == null && rightChild == null;
     }
-
 
 }

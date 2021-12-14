@@ -1,14 +1,36 @@
 package dataStructures;
 
+/**
+ * OrderedDoubleList implementation
+ *
+ * @param <K> Generic Key
+ * @param <V> Generic Value
+ */
 public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDictionary<K, V> {
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	protected DoubleList.DoubleListNode<Entry<K, V>> head;
+     * Serial Version UID of the Class.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Head node of the ordered double list
+     */
+    protected DoubleList.DoubleListNode<Entry<K, V>> head;
+
+    /**
+     * Tail node of the ordered double list
+     */
     protected DoubleList.DoubleListNode<Entry<K, V>> tail;
+
+    /**
+     * Size of the ordered double list
+     */
     protected int currentSize;
 
+    /**
+     * Ordered double list constructor
+     */
     public OrderedDoubleList() {
         head = null;
         tail = null;
@@ -82,8 +104,8 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
      * @param entry the entry to add
      */
     protected void addFirst(Entry<K, V> entry) {
-        DoubleList.DoubleListNode<Entry<K, V>> node =
-                new DoubleList.DoubleListNode<>(entry, null, head);
+        DoubleList.DoubleListNode<Entry<K, V>> node = new DoubleList.DoubleListNode<>(entry, null,
+                head);
 
         if (isEmpty())
             tail = node;
@@ -100,8 +122,8 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
      * @param entry the entry to add
      */
     protected void addLast(Entry<K, V> entry) {
-        DoubleList.DoubleListNode<Entry<K, V>> node =
-                new DoubleList.DoubleListNode<>(entry, tail, null);
+        DoubleList.DoubleListNode<Entry<K, V>> node = new DoubleList.DoubleListNode<>(entry, tail,
+                null);
 
         if (isEmpty())
             head = node;
@@ -122,8 +144,8 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
     protected V addMiddle(Entry<K, V> entry) {
         DoubleList.DoubleListNode<Entry<K, V>> next = findNode(entry.getKey());
         DoubleList.DoubleListNode<Entry<K, V>> prev = next.getPrevious();
-        DoubleList.DoubleListNode<Entry<K, V>> node =
-                new DoubleList.DoubleListNode<>(entry, prev, next);
+        DoubleList.DoubleListNode<Entry<K, V>> node = new DoubleList.DoubleListNode<>(entry, prev,
+                next);
 
         if (entry.getKey().compareTo(next.getElement().getKey()) == 0) {
             if (prev != null)
@@ -196,10 +218,10 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
     public Iterator<Entry<K, V>> iterator() {
         return new DoubleListIterator<>(head, tail);
     }
-    
+
     @Override
     public Iterator<V> valuesIterator() {
-    	return new DictionaryValuesIterator<>(iterator());
+        return new DictionaryValuesIterator<>(iterator());
     }
 
     @Override
@@ -217,6 +239,5 @@ public class OrderedDoubleList<K extends Comparable<K>, V> implements OrderedDic
 
         return tail.getElement();
     }
-    
-    
+
 }

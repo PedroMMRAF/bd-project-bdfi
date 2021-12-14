@@ -3,12 +3,13 @@ package dataStructures;
 /**
  * BinarySearchTree implementation
  *
- * @param <K> Generic type Key, must extend comparable
- * @param <V> Generic type Value
- * @author AED team
+ * @param <K> Generic Key, must extend comparable
+ * @param <V> Generic Value
+ * @author AED Team
  * @version 1.0
  */
 public class BinarySearchTree<K extends Comparable<K>, V> implements OrderedDictionary<K, V> {
+
     /**
      * Serial Version UID of the Class.
      */
@@ -239,16 +240,25 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements OrderedDict
         return new BSTKeyOrderIterator<>(root);
     }
 
+    /**
+     * Returns an iterator of the values in the dictionary.
+     *
+     * @return key-order iterator of the values in the dictionary
+     */
+    public Iterator<V> valuesIterator() {
+        return new DictionaryValuesIterator<>(iterator());
+    }
 
     /**
      * Inner class to store path steps
      *
-     * @param <K> Generic type Key, must extend comparable
-     * @param <V> Generic type Value
+     * @param <K> Generic Key, must extend comparable
+     * @param <V> Generic Value
      * @author AED team
      * @version 1.0
      */
     protected static class PathStep<K, V> {
+
         /**
          * The parent of the node.
          */
@@ -280,7 +290,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements OrderedDict
             parent = newParent;
             isLeftChild = toTheLeft;
         }
+
     }
 
 }
-

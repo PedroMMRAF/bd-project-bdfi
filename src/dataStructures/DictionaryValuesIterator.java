@@ -1,49 +1,46 @@
 package dataStructures;
 
+/**
+ * DictionaryValuesIterator implementation
+ *
+ * @param <K> Generic Key
+ * @param <V> Generic Value
+ */
+public class DictionaryValuesIterator<K, V> implements Iterator<V> {
 
-public class DictionaryValuesIterator<K,V> implements Iterator<V> {
+    /**
+     * Serial Version UID of the Class.
+     */
+    private static final long serialVersionUID = 1L;
 
+    /**
+     * Iterator of the entries of a dictionary.
+     */
+    protected Iterator<Entry<K, V>> iter;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     * DictionaryValuesIterator constructor
+     *
+     * @param iter - Original entry iterator
+     */
+    public DictionaryValuesIterator(Iterator<Entry<K, V>> iter) {
+        this.iter = iter;
+        this.rewind();
+    }
 
+    @Override
+    public void rewind() {
+        iter.rewind();
+    }
 
-	/**
-	 * Iterator of the entries of a dictionary.
-	 */
-	protected Iterator<Entry<K, V>> it;
+    @Override
+    public boolean hasNext() {
+        return iter.hasNext();
+    }
 
-
-	/**
-	 * DictionaryValuesIterator constructor
-	 *
-	 * @param iter - Original entry iterator
-	 */
-	public DictionaryValuesIterator(Iterator<Entry<K, V>> iter) {
-		it = iter;
-		this.rewind();
-	}
-
-
-	@Override
-	public void rewind() {
-		it.rewind();
-	}
-
-	@Override
-	public boolean hasNext() {
-		return it.hasNext();
-	}
-
-
-	@Override
-	public V next() throws NoSuchElementException {
-		return it.next().getValue();
-
-		
-	}
-
+    @Override
+    public V next() throws NoSuchElementException {
+        return iter.next().getValue();
+    }
 
 }

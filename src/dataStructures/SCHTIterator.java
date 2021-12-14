@@ -1,12 +1,31 @@
 package dataStructures;
 
+/**
+ * SCHTIterator implementation
+ *
+ * @param <K> Generic type Key
+ * @param <V> Generic type Value
+ */
 public class SCHTIterator<K, V> implements Iterator<Entry<K, V>> {
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private final Dictionary<K, V>[] table;
+     * Serial Version UID of the Class.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Original SepChainHashTable table
+     */
+    private final Dictionary<K, V>[] table;
+
+    /**
+     * Current chain iterator
+     */
     private Iterator<Entry<K, V>> current;
+
+    /**
+     * Next chain index
+     */
     private int next;
 
     SCHTIterator(Dictionary<K, V>[] table) {
@@ -19,7 +38,9 @@ public class SCHTIterator<K, V> implements Iterator<Entry<K, V>> {
         while ((current == null || !current.hasNext()) && next < table.length)
             current = table[next++].iterator();
 
-        assert current != null;
+        if (current == null)
+            return false;
+
         return current.hasNext();
     }
 
@@ -36,4 +57,5 @@ public class SCHTIterator<K, V> implements Iterator<Entry<K, V>> {
         next = 0;
         current = null;
     }
+
 }

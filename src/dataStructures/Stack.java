@@ -1,6 +1,3 @@
-/**
- * Package dataStructures for use in AED Curricular Unit
- */
 package dataStructures;
 
 import java.io.Serializable;
@@ -10,7 +7,7 @@ import java.io.Serializable;
  * Includes description of general methods for the Stack with the LIFO discipline.
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 public interface Stack<E> extends Serializable {
@@ -53,4 +50,3 @@ public interface Stack<E> extends Serializable {
     E pop() throws EmptyStackException;
 
 }
-

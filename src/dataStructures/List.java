@@ -7,10 +7,9 @@ import java.io.Serializable;
  * Includes description of general methods to be implemented by lists.
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
-
 public interface List<E> extends Serializable {
 
     /**
@@ -136,5 +135,4 @@ public interface List<E> extends Serializable {
      */
     boolean remove(E element);
 
-}   
-
+}

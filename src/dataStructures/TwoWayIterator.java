@@ -5,7 +5,7 @@ package dataStructures;
  * Includes description of general methods for two way iterator.
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 public interface TwoWayIterator<E> extends Iterator<E> {

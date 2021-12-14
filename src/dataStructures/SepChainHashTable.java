@@ -1,15 +1,15 @@
 package dataStructures;
 
 /**
- * Separate Chaining Hash table implementation
+ * SepChainHashTable implementation
  *
  * @param <K> Generic Key, must extend comparable
  * @param <V> Generic Value
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
-
 public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, V> {
+
     /**
      * Serial Version UID of the Class.
      */
@@ -19,7 +19,6 @@ public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, 
      * The array of dictionaries.
      */
     protected Dictionary<K, V>[] table;
-
 
     /**
      * Constructor of an empty separate chaining hash table,
@@ -41,7 +40,6 @@ public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, 
         maxSize = capacity;
         currentSize = 0;
     }
-
 
     public SepChainHashTable() {
         this(DEFAULT_CAPACITY);
@@ -109,41 +107,10 @@ public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, 
     public Iterator<Entry<K, V>> iterator() {
         return new SCHTIterator<>(table);
     }
-    
+
     @Override
     public Iterator<V> valuesIterator() {
-    	return new DictionaryValuesIterator<>(iterator());
+        return new DictionaryValuesIterator<>(iterator());
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

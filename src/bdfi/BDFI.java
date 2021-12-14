@@ -92,14 +92,14 @@ public interface BDFI extends Serializable {
      * @return the show associated to the idShow to print all the information required
      * @throws IdShowDoesNotExistException if idShow doesn't exist
      */
-    ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException;
+    ShowPrivate infoShow(String idShow) throws IdShowDoesNotExistException;
 
     /**
      * @param idPerson - the professional's unique identifier
      * @return the person associated to the idPerson to print all the information required
      * @throws IdPersonDoesNotExistException if idPerson doesn't exist
      */
-    PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException;
+    PersonPrivate infoPerson(String idPerson) throws IdPersonDoesNotExistException;
 
     /**
      * Lists all the shows where the person in the system are involved

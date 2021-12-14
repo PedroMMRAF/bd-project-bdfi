@@ -1,5 +1,10 @@
 package dataStructures;
 
+/**
+ * InvertibleQueue implementation
+ *
+ * @param <E> Generic Element
+ */
 public class InvertibleQueueInList<E> extends QueueInList<E> implements InvertibleQueue<E> {
 
     /**
@@ -7,6 +12,9 @@ public class InvertibleQueueInList<E> extends QueueInList<E> implements Invertib
      */
     static final long serialVersionUID = 0L;
 
+    /**
+     * State of the queue
+     */
     protected boolean inverted = false;
 
     @Override
@@ -32,4 +40,5 @@ public class InvertibleQueueInList<E> extends QueueInList<E> implements Invertib
         else
             return list.removeFirst();
     }
+
 }

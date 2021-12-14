@@ -3,10 +3,10 @@ package dataStructures;
 import dataStructures.DoubleList.DoubleListNode;
 
 /**
- * Implementation of Two Way Iterator for DLList
+ * Implementation of Two Way Iterator for DoubleList
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 class DoubleListIterator<E> implements TwoWayIterator<E> {
@@ -15,7 +15,6 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
      * Serial Version UID of the Class
      */
     static final long serialVersionUID = 0L;
-
 
     /**
      * Node with the first element in the iteration.
@@ -37,7 +36,6 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
      */
     protected DoubleListNode<E> prevToReturn;
 
-
     /**
      * DoublyLLIterator constructor
      *
@@ -50,13 +48,11 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
         this.rewind();
     }
 
-
     @Override
     public void rewind() {
         nextToReturn = firstNode;
         prevToReturn = null;
     }
-
 
     @Override
     public void fullForward() {
@@ -64,18 +60,15 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
         nextToReturn = null;
     }
 
-
     @Override
     public boolean hasNext() {
         return nextToReturn != null;
     }
 
-
     @Override
     public boolean hasPrevious() {
         return prevToReturn != null;
     }
-
 
     @Override
     public E next() throws NoSuchElementException {
@@ -88,7 +81,6 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
         return element;
     }
 
-
     @Override
     public E previous() throws NoSuchElementException {
         if (!this.hasPrevious())
@@ -99,6 +91,5 @@ class DoubleListIterator<E> implements TwoWayIterator<E> {
         prevToReturn = prevToReturn.getPrevious();
         return element;
     }
-
 
 }

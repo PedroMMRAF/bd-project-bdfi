@@ -7,7 +7,7 @@ import java.io.Serializable;
  * Includes description of general methods for one way iterator.
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 public interface Iterator<E> extends Serializable {

@@ -1,32 +1,40 @@
 package dataStructures;
 
+/**
+ * StackInList implementation
+ *
+ * @param <E> Generic Element
+ */
 public class StackInList<E> implements Stack<E> {
 
-    static final long serialVersionUID = 0L;
+    /**
+     * Serial Version UID of the Class.
+     */
+    public static final long serialVersionUID = 0L;
 
-
-    // Memory of the stack: a list.
+    /**
+     * Memory of the stack: a list.
+     */
     protected List<E> list;
 
-
+    /**
+     * StackInList constructor
+     */
     public StackInList() {
-        list = new DoubleList<E>();
+        list = new DoubleList<>();
     }
 
-
-    // Returns true iff the stack contains no elements.
+    @Override
     public boolean isEmpty() {
         return list.isEmpty();
     }
 
-
-    // Returns the number of elements in the stack.
+    @Override
     public int size() {
         return list.size();
     }
 
-
-    // Returns the element at the top of the stack.
+    @Override
     public E top() throws EmptyStackException {
         if (list.isEmpty())
             throw new EmptyStackException();
@@ -34,20 +42,17 @@ public class StackInList<E> implements Stack<E> {
         return list.getFirst();
     }
 
-
-    // Inserts the specified element onto the top of the stack.
+    @Override
     public void push(E element) {
         list.addFirst(element);
     }
 
-
-    // Removes and returns the element at the top of the stack.
+    @Override
     public E pop() throws EmptyStackException {
         if (list.isEmpty())
             throw new EmptyStackException();
 
         return list.removeFirst();
     }
-
 
 }

@@ -9,7 +9,7 @@ import dataStructures.OrderedDoubleList;
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
-public class PersonClass implements PersonBDFI {
+public class PersonClass implements PersonPrivate {
     // Serial version ID
 	private static final long serialVersionUID = 1L;
 
@@ -88,7 +88,7 @@ public class PersonClass implements PersonBDFI {
     }
 
     @Override
-    public void addShow(ShowBDFI show) {
+    public void addShow(ShowPrivate show) {
         shows.insert(show.getId().toLowerCase(), show);
     }
 

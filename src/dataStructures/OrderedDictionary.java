@@ -3,12 +3,13 @@ package dataStructures;
 /**
  * Ordered Dictionary interface
  *
- * @param <K> Generic type Key, must extend comparable
- * @param <V> Generic type Value
- * @author AED team
+ * @param <K> Generic Key, must extend comparable
+ * @param <V> Generic Value
+ * @author AED Team
  * @version 1.0
  */
 public interface OrderedDictionary<K extends Comparable<K>, V> extends Dictionary<K, V> {
+
     /**
      * Returns the entry with the smallest key in the dictionary.
      *
@@ -23,13 +24,4 @@ public interface OrderedDictionary<K extends Comparable<K>, V> extends Dictionar
      */
     Entry<K, V> maxEntry() throws EmptyDictionaryException;
 
-    /* (non-Javadoc)
-     * Returns an iterator of the entries in the dictionary
-     * which preserves the key order relation.
-     *
-     * @see dataStructures.Dictionary#iterator()
-     */
-    // Iterator<Entry<K,V>> iterator( );  
-
-} 
-
+}

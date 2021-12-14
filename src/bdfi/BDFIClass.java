@@ -24,14 +24,14 @@ public class BDFIClass implements BDFI {
      * Only used within this package
      * Implemented using a separate chain hash table
      */
-    protected Dictionary<String, PersonBDFI> people;
+    protected Dictionary<String, PersonPrivate> people;
 
     /**
      * Mapping of idShow -> ShowBDFI
      * Only used within this package
      * Implemented using a separate chain hash table
      */
-    protected Dictionary<String, ShowBDFI> shows;
+    protected Dictionary<String, ShowPrivate> shows;
 
     /**
      * Key ordered mapping of (RATING_MAX - rating) -> (Key ordered mapping of titleShow -> Show)
@@ -76,7 +76,7 @@ public class BDFIClass implements BDFI {
         if (people.find(idPerson) != null)
             throw new IdPersonExistsException();
 
-        PersonBDFI person = new PersonClass(idPerson, name, bYear, gender, email, phone);
+        PersonPrivate person = new PersonClass(idPerson, name, bYear, gender, email, phone);
 
         people.insert(idPerson, person);
     }
@@ -90,7 +90,7 @@ public class BDFIClass implements BDFI {
         if (shows.find(idShow) != null)
             throw new IdShowExistsException();
 
-        ShowBDFI show = new ShowClass(idShow, title, pYear, pYear != currentYear);
+        ShowPrivate show = new ShowClass(idShow, title, pYear, pYear != currentYear);
 
         shows.insert(idShow, show);
 
@@ -100,9 +100,9 @@ public class BDFIClass implements BDFI {
     @Override
     public void addParticipation(String idPerson, String idShow, String description)
             throws IdPersonDoesNotExistException, IdShowDoesNotExistException {
-        PersonBDFI person = getPerson(idPerson);
+        PersonPrivate person = getPerson(idPerson);
 
-        ShowBDFI show = getShow(idShow);
+        ShowPrivate show = getShow(idShow);
 
         person.addShow(show);
         show.addParticipant(new ParticipantClass(person, description));
@@ -111,7 +111,7 @@ public class BDFIClass implements BDFI {
     @Override
     public void premiereShow(String idShow)
             throws IdShowDoesNotExistException, HasPremieredException {
-        ShowBDFI show = getShow(idShow);
+        ShowPrivate show = getShow(idShow);
 
         if (show.hasPremiered())
             throw new HasPremieredException();
@@ -123,7 +123,7 @@ public class BDFIClass implements BDFI {
     @Override
     public void removeShow(String idShow)
             throws IdShowDoesNotExistException, HasPremieredException {
-        ShowBDFI show = getShow(idShow);
+        ShowPrivate show = getShow(idShow);
 
         if (show.hasPremiered())
             throw new HasPremieredException();
@@ -147,7 +147,7 @@ public class BDFIClass implements BDFI {
             taggedShows.insert(tag.toLowerCase(), dict);
         }
 
-        ShowBDFI show = getShow(idShow);
+        ShowPrivate show = getShow(idShow);
 
         dict.insert(show.getTitle().toLowerCase(), show);
 
@@ -160,7 +160,7 @@ public class BDFIClass implements BDFI {
         if (stars < RATING_MIN || stars > RATING_MAX)
             throw new InvalidRatingException();
 
-        ShowBDFI show = getShow(idShow);
+        ShowPrivate show = getShow(idShow);
 
         if (!show.hasPremiered())
             throw new HasPremieredException();
@@ -182,12 +182,12 @@ public class BDFIClass implements BDFI {
     }
 
     @Override
-    public ShowBDFI infoShow(String idShow) throws IdShowDoesNotExistException {
+    public ShowPrivate infoShow(String idShow) throws IdShowDoesNotExistException {
         return getShow(idShow);
     }
 
     @Override
-    public PersonBDFI infoPerson(String idPerson) throws IdPersonDoesNotExistException {
+    public PersonPrivate infoPerson(String idPerson) throws IdPersonDoesNotExistException {
         return getPerson(idPerson);
     }
 
@@ -270,8 +270,8 @@ public class BDFIClass implements BDFI {
      * @return a professional
      * @throws IdPersonDoesNotExistException if the professional does not exist
      */
-    private PersonBDFI getPerson(String idPerson) throws IdPersonDoesNotExistException {
-        PersonBDFI person = people.find(idPerson);
+    private PersonPrivate getPerson(String idPerson) throws IdPersonDoesNotExistException {
+        PersonPrivate person = people.find(idPerson);
 
         if (person == null)
             throw new IdPersonDoesNotExistException();
@@ -286,8 +286,8 @@ public class BDFIClass implements BDFI {
      * @return a show
      * @throws IdShowDoesNotExistException if the show does not exist
      */
-    private ShowBDFI getShow(String idShow) throws IdShowDoesNotExistException {
-        ShowBDFI show = shows.find(idShow);
+    private ShowPrivate getShow(String idShow) throws IdShowDoesNotExistException {
+        ShowPrivate show = shows.find(idShow);
 
         if (show == null)
             throw new IdShowDoesNotExistException();

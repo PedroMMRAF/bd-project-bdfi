@@ -4,22 +4,19 @@ package dataStructures;
  * Queue Array Implementation
  *
  * @param <E> Generic Element
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
 public class QueueInArray<E> implements Queue<E> {
 
     /**
-     * Serial Version UID of the Class
-     */
-    static final long serialVersionUID = 0L;
-
-
-    /**
      * Default capacity of the queue.
      */
     public static final int DEFAULT_CAPACITY = 1000;
-
+    /**
+     * Serial Version UID of the Class
+     */
+    static final long serialVersionUID = 0L;
     /**
      * Memory of the queue: a circular array.
      */
@@ -61,12 +58,10 @@ public class QueueInArray<E> implements Queue<E> {
         this(DEFAULT_CAPACITY);
     }
 
-
     @Override
     public boolean isEmpty() {
         return currentSize == 0;
     }
-
 
     /**
      * Returns true iff the queue cannot contain more elements.
@@ -77,12 +72,10 @@ public class QueueInArray<E> implements Queue<E> {
         return currentSize == array.length;
     }
 
-
     @Override
     public int size() {
         return currentSize;
     }
-
 
     /**
      * Increments with "wrap around".
@@ -93,7 +86,6 @@ public class QueueInArray<E> implements Queue<E> {
     protected int nextIndex(int index) {
         return (index + 1) % array.length;
     }
-
 
     /**
      * Inserts the specified element at the rear of the queue.
@@ -110,7 +102,6 @@ public class QueueInArray<E> implements Queue<E> {
         currentSize++;
     }
 
-
     @Override
     public E dequeue() throws EmptyQueueException {
         if (this.isEmpty())
@@ -122,6 +113,5 @@ public class QueueInArray<E> implements Queue<E> {
         currentSize--;
         return element;
     }
-
 
 }

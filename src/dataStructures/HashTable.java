@@ -5,11 +5,11 @@ package dataStructures;
  *
  * @param <K> Generic Key
  * @param <V> Generic Value
- * @author AED  Team
+ * @author AED Team
  * @version 1.0
  */
-
 public abstract class HashTable<K, V> implements Dictionary<K, V> {
+
     /**
      * Default size of the hash table.
      */
@@ -23,7 +23,6 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
             287003, 430517, 645787, 968689, 1453043, 2179571, 3269377, 4904077, 7356119, 11034223
             , 16551361, 24827059, 37240597, 55860923, 83791441, 125687173, 188530777, 282796177,
             424194271, 636291413, 954437161, 1431655751, 2147483647};
-
 
     /**
      * Serial Version UID of the Class.
@@ -40,10 +39,10 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
      */
     protected int maxSize;
 
-
     //
     // Public Static Methods
     //
+
     /**
      * Returns the hash code of the specified key,
      * which is an integer in the range 0, ..., b-1.
@@ -61,10 +60,10 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
         return hashCode;
     }
 
-
     //
     // Protected Static Methods
     //
+
     /**
      * Returns a prime number that is not less than the specified number;
      * or zero if all such primes are greater than Integer.MAX_VALUE.
@@ -79,10 +78,10 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
         return 0;
     }
 
-
     //
     // Public Instance Methods
     //
+
     @Override
     public boolean isEmpty() {
         return currentSize == 0;
@@ -105,10 +104,10 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
     @Override
     public abstract Iterator<Entry<K, V>> iterator();
 
-
     //
     // Protected Instance Methods
     //
+
     /**
      * Returns true iff the hash table cannot contain more entries.
      *
@@ -117,32 +116,5 @@ public abstract class HashTable<K, V> implements Dictionary<K, V> {
     protected boolean isFull() {
         return currentSize == maxSize;
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
