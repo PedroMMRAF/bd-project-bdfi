@@ -19,6 +19,7 @@ public class BDFIClass implements BDFI {
      */
     private static final int RATING_MIN = 0;
     private static final int RATING_MAX = 10;
+    private static final int RATINGS = RATING_MAX - RATING_MIN + 1;
 
     /**
      * Used to check if shows are still in production or not
@@ -28,7 +29,12 @@ public class BDFIClass implements BDFI {
     /**
      * Used to check if any shows have premiered or not
      */
-    protected boolean premieredShows;
+    protected boolean hasPremieredShows;
+
+    /**
+     * Used to check if any shows have been rated or not
+     */
+    protected boolean hasRatedShows;
 
     /**
      * Used to check how many shows have been tagged
@@ -50,12 +56,11 @@ public class BDFIClass implements BDFI {
     protected Dictionary<String, ShowPrivate> shows;
 
     /**
-     * Key ordered mapping of ratingShow -> (Key ordered mapping of titleShow -> Show)
+     * Array of key ordered mapping of titleShow -> Show
      * Used for title ordered iteration of shows with a specific rating
-     * First layer: Binary search tree
-     * Second layer: Ordered double list
+     * Implemented using an array of ordered double lists
      */
-    protected OrderedDictionary<Integer, OrderedDictionary<String, Show>> ratedShows;
+    protected OrderedDictionary<String, Show>[] ratedShows;
 
     /**
      * Key ordered mapping of tagShow -> (Key ordered mapping of titleShow -> Show)
@@ -70,14 +75,18 @@ public class BDFIClass implements BDFI {
      *
      * @param currentYear - the currently ongoing year
      */
+    @SuppressWarnings("unchecked")
     public BDFIClass(int currentYear) {
         this.currentYear = currentYear;
-        this.premieredShows = false;
+        this.hasPremieredShows = false;
         this.taggedShowCount = 0;
         this.people = new SepChainHashTable<>();
         this.shows = new SepChainHashTable<>();
-        this.ratedShows = new BinarySearchTree<>();
+        this.ratedShows = (OrderedDictionary<String, Show>[]) new OrderedDictionary[RATINGS];
         this.taggedShows = new SepChainHashTable<>();
+
+        for (int i = 0; i < RATINGS; i++)
+            this.ratedShows[i] = new OrderedDoubleList<>();
     }
 
     @Override
@@ -111,7 +120,7 @@ public class BDFIClass implements BDFI {
 
         shows.insert(idShow.toLowerCase(), show);
 
-        premieredShows = premieredShows || show.hasPremiered();
+        hasPremieredShows = hasPremieredShows || show.hasPremiered();
     }
 
     @Override
@@ -134,7 +143,7 @@ public class BDFIClass implements BDFI {
             throw new HasPremieredException();
 
         show.premiere();
-        premieredShows = true;
+        hasPremieredShows = true;
     }
 
     @Override
@@ -153,8 +162,8 @@ public class BDFIClass implements BDFI {
         Iterator<String> it = show.listTags();
 
         while (it.hasNext()) {
-            taggedShowCount--;
             taggedShows.find(it.next().toLowerCase()).remove(show.getTitle().toLowerCase());
+            taggedShowCount--;
         }
     }
 
@@ -172,7 +181,6 @@ public class BDFIClass implements BDFI {
         tagged.insert(show.getTitle().toLowerCase(), show);
 
         show.addTag(tag);
-
         taggedShowCount++;
     }
 
@@ -187,20 +195,14 @@ public class BDFIClass implements BDFI {
         if (!show.hasPremiered())
             throw new HasPremieredException();
 
+        // Necessary since rating can change
         if (show.hasRatings())
-            ratedShows.find(invRating(show)).remove(show.getTitle().toLowerCase());
+            ratedShows[invRating(show)].remove(show.getTitle().toLowerCase());
 
         show.addRating(stars);
+        hasRatedShows = true;
 
-        OrderedDictionary<String, Show> rated = ratedShows.find(invRating(show));
-
-        if (rated == null) {
-            rated = new OrderedDoubleList<>();
-            ratedShows.insert(invRating(show), rated);
-        }
-
-        rated.insert(show.getTitle().toLowerCase(), show);
-
+        ratedShows[invRating(show)].insert(show.getTitle().toLowerCase(), show);
     }
 
     @Override
@@ -231,22 +233,23 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        if (!premieredShows)
+        if (!hasPremieredShows)
             throw new NoShowsPremieredException();
 
-        if (ratedShows.isEmpty())
+        if (!hasRatedShows)
             throw new NoRatedShowsException();
 
-        Iterator<OrderedDictionary<String, Show>> it = ratedShows.valuesIterator();
+        int current = 0;
 
-        Iterator<Show> showsIt = it.next().valuesIterator();
+        OrderedDictionary<String, Show> shows = ratedShows[current];
 
-        while (!showsIt.hasNext())
-            showsIt = it.next().valuesIterator();
+        while (shows.isEmpty())
+            shows = ratedShows[++current];
 
-        // No need to verify if 'it' exhausts because it at least one rated show exists
+        // No need to verify if 'current' exceeds 'ratedShows''s size
+        // because at least one rated show exists
 
-        return showsIt;
+        return shows.valuesIterator();
     }
 
     @Override
@@ -259,18 +262,18 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        if (!premieredShows)
+        if (!hasPremieredShows)
             throw new NoShowsPremieredException();
 
-        if (ratedShows.isEmpty())
+        if (!hasRatedShows)
             throw new NoRatedShowsException();
 
-        OrderedDictionary<String, Show> dict = ratedShows.find(invRating(rating));
+        OrderedDictionary<String, Show> shows = ratedShows[invRating(rating)];
 
-        if (dict == null || dict.isEmpty())
+        if (shows.isEmpty())
             throw new NoShowsWithRatingException();
 
-        return dict.valuesIterator();
+        return shows.valuesIterator();
     }
 
     @Override

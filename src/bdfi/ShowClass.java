@@ -26,18 +26,21 @@ public class ShowClass implements ShowPrivate {
 
     /**
      * List of tags
+     * Used for iteration and tag verification (find)
      * Implemented using a double list
      */
     private final List<String> tags;
 
     /**
      * List of participants
+     * Used for iteration
      * Implemented using a double list
      */
     private final List<Participant> participants;
 
     /**
      * Mapping of idPerson -> Person
+     * Used for show removal
      * Implemented using a separate chain hash table
      */
     private final Dictionary<String, PersonPrivate> people;

@@ -97,10 +97,10 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         if (bdfi == null)
@@ -125,10 +125,10 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
         catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
