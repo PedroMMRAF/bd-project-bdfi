@@ -13,4 +13,11 @@ interface PersonPrivate extends Person {
      */
     void addShow(ShowPrivate show);
 
+    /**
+     * Removes a show where the person used to participate
+     *
+     * @param show - show to remove
+     */
+    void removeShow(ShowPrivate show);
+
 }

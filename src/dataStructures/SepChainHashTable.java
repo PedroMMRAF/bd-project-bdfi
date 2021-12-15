@@ -73,24 +73,18 @@ public class SepChainHashTable<K extends Comparable<K>, V> extends HashTable<K, 
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     protected void rehash() {
-        int arraySize = HashTable.nextPrime(table.length * 2);
-        Dictionary<K, V>[] reHashed = (Dictionary<K, V>[]) new Dictionary[arraySize];
-
-        for (int i = 0; i < arraySize; i++)
-            reHashed[i] = new OrderedDoubleList<>();
-
-        maxSize = (int) (arraySize * 0.75);
+        SepChainHashTable<K, V> re = new SepChainHashTable<>(table.length * 2);
 
         Iterator<Entry<K, V>> it = iterator();
 
         while (it.hasNext()) {
             Entry<K, V> entry = it.next();
-            reHashed[this.hash(entry.getKey())].insert(entry.getKey(), entry.getValue());
+            re.insert(entry.getKey(), entry.getValue());
         }
 
-        table = reHashed;
+        table = re.table;
+        maxSize = re.maxSize;
     }
 
     @Override

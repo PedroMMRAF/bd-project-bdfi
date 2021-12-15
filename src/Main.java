@@ -10,19 +10,28 @@ import java.util.Scanner;
  * @author Pedro Fernandes 60694
  */
 public class Main {
-    // Current year to be used by the constructor of the database
+
+    /**
+     * Current year to be used by the constructor of the database
+     */
     private static final int CURRENT_YEAR = 2021;
 
-    // BDFI save data file name
+    /**
+     * BDFI save data file name
+     */
     private static final String DATA_FILE = "bdfi.dat";
 
-    // Gender names
+    /**
+     * Gender names
+     */
     private static final String MALE = "male";
     private static final String FEMALE = "female";
     private static final String OTHER = "other";
     private static final String NOT_PROVIDED = "not-provided";
 
-    // Success messages
+    /**
+     * Success messages
+     */
     private static final String PERSON_ADDED = "Person added.\n";
     private static final String PERSON_FORMAT = "%s %s %d %s %s %s\n";
     private static final String PARTICIPANT_FORMAT = "%s %s %d %s %s %s %s\n";
@@ -34,7 +43,9 @@ public class Main {
     private static final String SHOW_FORMAT = "%s %s %d %d\n";
     private static final String SHOW_RATED = "Rating applied.\n";
 
-    // Error messages
+    /**
+     * Error messages
+     */
     private static final String UNKNOWN_COMMAND = "Unknown command.\n";
     private static final String INVALID_YEAR = "Invalid year.\n";
     private static final String INVALID_GENDER = "Invalid gender information.\n";
@@ -64,7 +75,8 @@ public class Main {
         BDFI bdfi = loadData();
 
         // Run until false is returned, meaning execution ended
-        while (runCommands(in, bdfi)) ;
+        while (runCommands(in, bdfi))
+            ;
     }
 
     /**
@@ -85,10 +97,10 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            // ignore
+            e.printStackTrace();
         }
         catch (IOException | ClassNotFoundException e) {
-            // ignore
+            e.printStackTrace();
         }
 
         if (bdfi == null)
@@ -113,10 +125,10 @@ public class Main {
             fp.close();
         }
         catch (FileNotFoundException e) {
-            // ignore
+            e.printStackTrace();
         }
         catch (IOException e) {
-            // ignore
+            e.printStackTrace();
         }
     }
 
@@ -255,8 +267,8 @@ public class Main {
         Person person = participant.getPerson();
 
         System.out.printf(PARTICIPANT_FORMAT, person.getId(), person.getName(),
-                person.getBirthYear(), person.getEmail(), person.getPhone(),
-                person.getGender(), participant.getDescription());
+                person.getBirthYear(), person.getEmail(), person.getPhone(), person.getGender(),
+                participant.getDescription());
     }
 
     /**
@@ -417,7 +429,6 @@ public class Main {
 
             while (tags.hasNext())
                 System.out.println(tags.next());
-
         }
         catch (IdShowDoesNotExistException e) {
             System.out.print(SHOW_MISSING);
@@ -570,6 +581,9 @@ public class Main {
         catch (NoRatedShowsException e) {
             System.out.print(NO_SHOWS_RATED);
         }
+        catch (NoShowsWithRatingException e) {
+            System.out.print(NO_SHOWS_WITH_RATING);
+        }
     }
 
     /**
@@ -594,9 +608,8 @@ public class Main {
             System.out.print(NO_SHOWS_TAGGED);
         }
         catch (NoShowsWithTagException e) {
-            System.out.println(NO_SHOWS_WITH_TAG);
+            System.out.print(NO_SHOWS_WITH_TAG);
         }
-
     }
 
     /**

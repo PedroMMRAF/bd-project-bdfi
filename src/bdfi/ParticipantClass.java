@@ -6,12 +6,19 @@ package bdfi;
  */
 public class ParticipantClass implements Participant {
 
+    /**
+     * Serial Version UID of the Class.
+     */
     private static final long serialVersionUID = 1L;
 
-    // Store original person object as is
+    /**
+     * Store original person object as is
+     */
     protected Person person;
 
-    // Include a description of the person's role
+    /**
+     * Include a description of the person's role
+     */
     protected String description;
 
     /**

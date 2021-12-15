@@ -147,7 +147,7 @@ public interface BDFI extends Serializable {
      */
     Iterator<Show> listShows(int rating)
             throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
-            NoRatedShowsException;
+            NoRatedShowsException, NoShowsWithRatingException;
 
     /**
      * Lists every show in the system with a given tag

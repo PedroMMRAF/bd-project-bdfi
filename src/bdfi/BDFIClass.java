@@ -9,15 +9,31 @@ import dataStructures.*;
  */
 public class BDFIClass implements BDFI {
 
+    /**
+     * Serial Version UID of the Class.
+     */
     private static final long serialVersionUID = 1L;
 
-    // Rating score limits
+    /**
+     * Rating score limits
+     */
     private static final int RATING_MIN = 0;
     private static final int RATING_MAX = 10;
 
-    // Instance variables
+    /**
+     * Used to check if shows are still in production or not
+     */
     protected int currentYear;
+
+    /**
+     * Used to check if any shows have premiered or not
+     */
     protected boolean premieredShows;
+
+    /**
+     * Used to check how many shows have been tagged
+     */
+    protected int taggedShowCount;
 
     /**
      * Mapping of idPerson -> PersonBDFI
@@ -34,7 +50,7 @@ public class BDFIClass implements BDFI {
     protected Dictionary<String, ShowPrivate> shows;
 
     /**
-     * Key ordered mapping of (RATING_MAX - rating) -> (Key ordered mapping of titleShow -> Show)
+     * Key ordered mapping of ratingShow -> (Key ordered mapping of titleShow -> Show)
      * Used for title ordered iteration of shows with a specific rating
      * First layer: Binary search tree
      * Second layer: Ordered double list
@@ -57,6 +73,7 @@ public class BDFIClass implements BDFI {
     public BDFIClass(int currentYear) {
         this.currentYear = currentYear;
         this.premieredShows = false;
+        this.taggedShowCount = 0;
         this.people = new SepChainHashTable<>();
         this.shows = new SepChainHashTable<>();
         this.ratedShows = new BinarySearchTree<>();
@@ -73,12 +90,12 @@ public class BDFIClass implements BDFI {
         if (gender == null)
             throw new InvalidGenderException();
 
-        if (people.find(idPerson) != null)
+        if (people.find(idPerson.toLowerCase()) != null)
             throw new IdPersonExistsException();
 
         PersonPrivate person = new PersonClass(idPerson, name, bYear, gender, email, phone);
 
-        people.insert(idPerson, person);
+        people.insert(idPerson.toLowerCase(), person);
     }
 
     @Override
@@ -87,12 +104,12 @@ public class BDFIClass implements BDFI {
         if (pYear < 0 || pYear > currentYear)
             throw new InvalidYearException();
 
-        if (shows.find(idShow) != null)
+        if (shows.find(idShow.toLowerCase()) != null)
             throw new IdShowExistsException();
 
         ShowPrivate show = new ShowClass(idShow, title, pYear, pYear != currentYear);
 
-        shows.insert(idShow, show);
+        shows.insert(idShow.toLowerCase(), show);
 
         premieredShows = premieredShows || show.hasPremiered();
     }
@@ -105,7 +122,7 @@ public class BDFIClass implements BDFI {
         ShowPrivate show = getShow(idShow);
 
         person.addShow(show);
-        show.addParticipant(new ParticipantClass(person, description));
+        show.addParticipant(person, description);
     }
 
     @Override
@@ -128,30 +145,35 @@ public class BDFIClass implements BDFI {
         if (show.hasPremiered())
             throw new HasPremieredException();
 
+        // Show cannot be rated, therefore does not need to be removed from ratedShows
+
         shows.remove(idShow);
+        show.removePeople();
 
         Iterator<String> it = show.listTags();
 
         while (it.hasNext()) {
-            String tag = it.next();
-            taggedShows.find(tag.toLowerCase()).remove(show.getTitle());
+            taggedShowCount--;
+            taggedShows.find(it.next().toLowerCase()).remove(show.getTitle().toLowerCase());
         }
     }
 
     @Override
     public void addTag(String idShow, String tag) throws IdShowDoesNotExistException {
-        OrderedDictionary<String, Show> dict = taggedShows.find(tag.toLowerCase());
+        OrderedDictionary<String, Show> tagged = taggedShows.find(tag.toLowerCase());
 
-        if (dict == null) {
-            dict = new OrderedDoubleList<>();
-            taggedShows.insert(tag.toLowerCase(), dict);
+        if (tagged == null) {
+            tagged = new OrderedDoubleList<>();
+            taggedShows.insert(tag.toLowerCase(), tagged);
         }
 
         ShowPrivate show = getShow(idShow);
 
-        dict.insert(show.getTitle().toLowerCase(), show);
+        tagged.insert(show.getTitle().toLowerCase(), show);
 
         show.addTag(tag);
+
+        taggedShowCount++;
     }
 
     @Override
@@ -166,18 +188,18 @@ public class BDFIClass implements BDFI {
             throw new HasPremieredException();
 
         if (show.hasRatings())
-            ratedShows.find(show.getRating()).remove(show.getTitle().toLowerCase());
+            ratedShows.find(invRating(show)).remove(show.getTitle().toLowerCase());
 
         show.addRating(stars);
 
-        OrderedDictionary<String, Show> dict = ratedShows.find(show.getRating());
+        OrderedDictionary<String, Show> rated = ratedShows.find(invRating(show));
 
-        if (dict == null) {
-            dict = new OrderedDoubleList<>();
-            ratedShows.insert(show.getRating(), dict);
+        if (rated == null) {
+            rated = new OrderedDoubleList<>();
+            ratedShows.insert(invRating(show), rated);
         }
 
-        dict.insert(show.getTitle().toLowerCase(), show);
+        rated.insert(show.getTitle().toLowerCase(), show);
 
     }
 
@@ -212,15 +234,17 @@ public class BDFIClass implements BDFI {
         if (!premieredShows)
             throw new NoShowsPremieredException();
 
-        Iterator<OrderedDictionary<String, Show>> it = ratedShows.valuesIterator();
-
-        if (!it.hasNext())
+        if (ratedShows.isEmpty())
             throw new NoRatedShowsException();
+
+        Iterator<OrderedDictionary<String, Show>> it = ratedShows.valuesIterator();
 
         Iterator<Show> showsIt = it.next().valuesIterator();
 
         while (!showsIt.hasNext())
             showsIt = it.next().valuesIterator();
+
+        // No need to verify if 'it' exhausts because it at least one rated show exists
 
         return showsIt;
     }
@@ -228,7 +252,7 @@ public class BDFIClass implements BDFI {
     @Override
     public Iterator<Show> listShows(int rating)
             throws InvalidRatingException, NoShowsInSystemException, NoShowsPremieredException,
-            NoRatedShowsException {
+            NoRatedShowsException, NoShowsWithRatingException {
         if (rating < RATING_MIN || rating > RATING_MAX)
             throw new InvalidRatingException();
 
@@ -238,10 +262,13 @@ public class BDFIClass implements BDFI {
         if (!premieredShows)
             throw new NoShowsPremieredException();
 
-        OrderedDictionary<String, Show> dict = ratedShows.find(rating);
+        if (ratedShows.isEmpty())
+            throw new NoRatedShowsException();
+
+        OrderedDictionary<String, Show> dict = ratedShows.find(invRating(rating));
 
         if (dict == null || dict.isEmpty())
-            throw new NoRatedShowsException();
+            throw new NoShowsWithRatingException();
 
         return dict.valuesIterator();
     }
@@ -252,7 +279,7 @@ public class BDFIClass implements BDFI {
         if (shows.isEmpty())
             throw new NoShowsInSystemException();
 
-        if (taggedShows.isEmpty())
+        if (taggedShowCount == 0)
             throw new NoTaggedShowsException();
 
         OrderedDictionary<String, Show> dict = taggedShows.find(tag.toLowerCase());
@@ -271,7 +298,7 @@ public class BDFIClass implements BDFI {
      * @throws IdPersonDoesNotExistException if the professional does not exist
      */
     private PersonPrivate getPerson(String idPerson) throws IdPersonDoesNotExistException {
-        PersonPrivate person = people.find(idPerson);
+        PersonPrivate person = people.find(idPerson.toLowerCase());
 
         if (person == null)
             throw new IdPersonDoesNotExistException();
@@ -287,12 +314,28 @@ public class BDFIClass implements BDFI {
      * @throws IdShowDoesNotExistException if the show does not exist
      */
     private ShowPrivate getShow(String idShow) throws IdShowDoesNotExistException {
-        ShowPrivate show = shows.find(idShow);
+        ShowPrivate show = shows.find(idShow.toLowerCase());
 
         if (show == null)
             throw new IdShowDoesNotExistException();
 
         return show;
     }
-    
+
+    /**
+     * @param show - a show
+     * @return Inverted show rating for sorting
+     */
+    private int invRating(ShowPrivate show) {
+        return invRating(show.getRating());
+    }
+
+    /**
+     * @param rating - a rating value
+     * @return Inverted rating for sorting
+     */
+    private int invRating(int rating) {
+        return RATING_MAX - rating;
+    }
+
 }

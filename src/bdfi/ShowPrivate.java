@@ -21,9 +21,10 @@ interface ShowPrivate extends Show {
     /**
      * Adds a participant to the show
      *
-     * @param participant - the participant to add
+     * @param person        - the participating person
+     * @param description   - the participation's description
      */
-    void addParticipant(Participant participant);
+    void addParticipant(PersonPrivate person, String description);
 
     /**
      * Adds one rating on the show
@@ -31,4 +32,10 @@ interface ShowPrivate extends Show {
      * @param stars - the rating added to the show
      */
     void addRating(int stars);
+
+    /**
+     * Removes every association a person has with this show
+     */
+    void removePeople();
+
 }

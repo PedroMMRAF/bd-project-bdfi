@@ -1,28 +1,46 @@
 package bdfi;
 
 import bdfi.exceptions.ShowHasNoParticipantsException;
-import dataStructures.DoubleList;
-import dataStructures.Iterator;
-import dataStructures.List;
+import dataStructures.*;
 
 /**
  * @author Guilherme Santana 60182
  * @author Pedro Fernandes 60694
  */
 public class ShowClass implements ShowPrivate {
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	// Instance variables
+     * Serial Version UID of the Class.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Instance variables
+     */
     private final String id;
     private final String title;
     private final int prodYear;
     private boolean premiered;
-    private final List<String> tags;
-    private final List<Participant> participants;
     private int ratingCount;
     private int rating;
+
+    /**
+     * List of tags
+     * Implemented using a double list
+     */
+    private final List<String> tags;
+
+    /**
+     * List of participants
+     * Implemented using a double list
+     */
+    private final List<Participant> participants;
+
+    /**
+     * Mapping of idPerson -> Person
+     * Implemented using a separate chain hash table
+     */
+    private final Dictionary<String, PersonPrivate> people;
 
     /**
      * Show data structure implementation
@@ -37,10 +55,11 @@ public class ShowClass implements ShowPrivate {
         this.title = title;
         this.prodYear = prodYear;
         this.premiered = premiered;
-        this.tags = new DoubleList<>();
-        this.participants = new DoubleList<>();
         this.ratingCount = 0;
         this.rating = 0;
+        this.tags = new DoubleList<>();
+        this.participants = new DoubleList<>();
+        this.people = new SepChainHashTable<>();
     }
 
     @Override
@@ -102,14 +121,23 @@ public class ShowClass implements ShowPrivate {
     }
 
     @Override
-    public void addParticipant(Participant participant) {
-        participants.addLast(participant);
+    public void addParticipant(PersonPrivate person, String description) {
+        participants.addLast(new ParticipantClass(person, description));
+        people.insert(person.getId(), person);
     }
 
     @Override
     public void addRating(int stars) {
         rating = bdfiAlg.updateReview(stars, ratingCount, rating);
         ratingCount++;
+    }
+
+    @Override
+    public void removePeople() {
+        Iterator<PersonPrivate> it = people.valuesIterator();
+
+        while (it.hasNext())
+            it.next().removeShow(this);
     }
 
     @Override
@@ -121,4 +149,5 @@ public class ShowClass implements ShowPrivate {
         ShowClass showClass = (ShowClass) o;
         return id.equalsIgnoreCase(showClass.id);
     }
+
 }

@@ -10,10 +10,15 @@ import dataStructures.OrderedDoubleList;
  * @author Pedro Fernandes 60694
  */
 public class PersonClass implements PersonPrivate {
-    // Serial version ID
-	private static final long serialVersionUID = 1L;
 
-	// Instance variables describing a person's details
+    /**
+     * Serial Version UID of the Class.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Instance variables
+     */
     protected String id;
     protected String name;
     protected int birthYear;
@@ -89,7 +94,12 @@ public class PersonClass implements PersonPrivate {
 
     @Override
     public void addShow(ShowPrivate show) {
-        shows.insert(show.getId().toLowerCase(), show);
+        shows.insert(show.getId(), show);
+    }
+
+    @Override
+    public void removeShow(ShowPrivate show) {
+        shows.remove(show.getId());
     }
 
     @Override
@@ -101,4 +111,5 @@ public class PersonClass implements PersonPrivate {
         PersonClass that = (PersonClass) o;
         return id.equalsIgnoreCase(that.id);
     }
+
 }
